@@ -1052,10 +1052,12 @@ class ResearchController extends BaseController
                 return $this->fail('Maximum of 10 files allowed per upload', 400);
             }
 
-            // Optional per-file ISBN/edition hints: pdf_isbn[] and pdf_edition[]
+            // Optional per-file manual record IDs and ISBN/edition hints.
             // Index corresponds to the order of pdf_files[].
+            $manualResearchIds = $this->request->getPost('pdf_research_id') ?? [];
             $isbnHints    = $this->request->getPost('pdf_isbn')    ?? [];
             $editionHints = $this->request->getPost('pdf_edition') ?? [];
+            if (!is_array($manualResearchIds)) $manualResearchIds = [];
             if (!is_array($isbnHints))    $isbnHints    = [];
             if (!is_array($editionHints)) $editionHints = [];
 
@@ -1081,30 +1083,41 @@ class ResearchController extends BaseController
                 // Filename without extension is the primary title candidate
                 $titleCandidate = pathinfo($originalName, PATHINFO_FILENAME);
 
-                // Per-file hints (optional, sent alongside files from frontend)
-                $isbnHint    = trim((string) ($isbnHints[$idx]    ?? ''));
-                $editionHint = trim((string) ($editionHints[$idx] ?? ''));
+                $manualResearchId = (int) ($manualResearchIds[$idx] ?? 0);
+                if ($manualResearchId > 0) {
+                    $resultStatus = $this->researchService->attachPdfToResearchId($manualResearchId, $file);
+                } else {
+                    // Per-file hints (optional, sent alongside files from frontend)
+                    $isbnHint    = trim((string) ($isbnHints[$idx]    ?? ''));
+                    $editionHint = trim((string) ($editionHints[$idx] ?? ''));
 
-                // Call Service to find and attach (service also auto-parses bracket hints)
-                $resultStatus = $this->researchService->matchAndAttachPdf(
-                    $titleCandidate, $file, $isbnHint, $editionHint
-                );
+                    // Call Service to find and attach (service also auto-parses bracket hints)
+                    $resultStatus = $this->researchService->matchAndAttachPdf(
+                        $titleCandidate, $file, $isbnHint, $editionHint
+                    );
+                }
 
                 if ($resultStatus === 'linked') {
                     $matched++;
-                    $details[] = "✅ Linked: $originalName";
+                    $details[] = $manualResearchId > 0
+                        ? "Linked manually: $originalName to record ID $manualResearchId"
+                        : "Linked: $originalName";
                 }
                 elseif ($resultStatus === 'exists') {
                     $skipped++;
-                    $details[] = "⏭️ Skipped: $originalName (Record already has a file)";
+                    $details[] = $manualResearchId > 0
+                        ? "Skipped: $originalName (Selected record already has a file)"
+                        : "Skipped: $originalName (Record already has a file)";
                 }
                 elseif ($resultStatus === 'no_match') {
                     $skipped++;
-                    $details[] = "❌ Skipped: $originalName (No matching record found — check title, ISBN, or edition)";
+                    $details[] = $manualResearchId > 0
+                        ? "Skipped: $originalName (Selected record was not found)"
+                        : "Skipped: $originalName (No matching record found; check title, ISBN, or edition)";
                 }
                 else {
                     $skipped++;
-                    $details[] = "⚠️ Skipped: $originalName (Encryption/storage error)";
+                    $details[] = "Skipped: $originalName (Encryption/storage error)";
                 }
             }
 
@@ -1147,7 +1160,8 @@ class ResearchController extends BaseController
             $results = $this->researchService->previewPdfMatches($files);
             return $this->response->setJSON([
                 'status' => 'success',
-                'preview' => $results
+                'preview' => $results,
+                'unlinked_records' => $this->researchService->getRecordsMissingPdf()
             ]);
         } catch (\Throwable $e) {
             log_message('error', '[Preview Bulk PDF] ' . $e->getMessage());

@@ -314,6 +314,8 @@ const handlePdfChange = (event: Event | DragEvent) => {
         selectedPdfs.value = Array.from(files)
         pdfStatus.value = { message: '', type: '', details: [] }
         showPdfConfirm.value = false
+        pdfPreviewMatches.value = []
+        pdfManualRecords.value = []
     }
 }
 
@@ -336,6 +338,13 @@ const pdfFileInfo = computed(() => {
 
 // Store matches for display
 const pdfPreviewMatches = ref<any[]>([])
+const pdfManualRecords = ref<any[]>([])
+
+const isManualRecordSelected = (recordId: number, currentIndex: number): boolean => {
+    return pdfPreviewMatches.value.some((match, index) =>
+        index !== currentIndex && Number(match.manualResearchId || 0) === Number(recordId)
+    )
+}
 
 // Show confirmation before uploading
 const showPdfConfirmation = async () => {
@@ -354,10 +363,11 @@ const showPdfConfirmation = async () => {
         
         const response = await api.post('/research/preview-bulk-pdfs', payload)
         if (response.data.status === 'success') {
+            pdfManualRecords.value = response.data.unlinked_records || []
             // merge matches with file size info
             pdfPreviewMatches.value = response.data.preview.map((p: any) => {
                 const fInfo = pdfFileInfo.value.find(f => f.name === p.filename)
-                return { ...p, size: fInfo?.size || '', title: fInfo?.title || '', hint: fInfo?.hint || '' }
+                return { ...p, size: fInfo?.size || '', title: fInfo?.title || '', hint: fInfo?.hint || '', manualResearchId: '' }
             })
             showPdfConfirm.value = true
             pdfStatus.value = { message: '', type: '', details: [] }
@@ -375,6 +385,7 @@ const showPdfConfirmation = async () => {
 const cancelPdfConfirm = () => {
     showPdfConfirm.value = false
     pdfPreviewMatches.value = []
+    pdfManualRecords.value = []
 }
 
 const removePdfFile = (index: number) => {
@@ -383,6 +394,7 @@ const removePdfFile = (index: number) => {
     if (selectedPdfs.value.length === 0) {
         showPdfConfirm.value = false
         pdfPreviewMatches.value = []
+        pdfManualRecords.value = []
     }
 }
 
@@ -394,8 +406,13 @@ const confirmPdfUpload = async () => {
     pdfStatus.value = { message: '⏳ Uploading and linking...', type: '' }
 
     const formData = new FormData()
-    selectedPdfs.value.forEach((file) => {
+    selectedPdfs.value.forEach((file, index) => {
         formData.append('pdf_files[]', file)
+        const match = pdfPreviewMatches.value[index] || {}
+        const hint = String(match.hint || '')
+        formData.append('pdf_research_id[]', String(match.manualResearchId || ''))
+        formData.append('pdf_isbn[]', /isbn|issn/i.test(hint) ? hint.replace(/isbn|issn/i, '').replace(/[:-]/g, '').trim() : '')
+        formData.append('pdf_edition[]', !/isbn|issn/i.test(hint) ? hint : '')
     })
 
     try {
@@ -420,6 +437,8 @@ const confirmPdfUpload = async () => {
             }
             showToast(msg, 'success')
             selectedPdfs.value = []
+            pdfPreviewMatches.value = []
+            pdfManualRecords.value = []
             if(pdfInput.value) pdfInput.value.value = ''
             apiCache.invalidate('research')
         } else {
@@ -758,7 +777,7 @@ const confirmPdfUpload = async () => {
     <!-- ═══════════════════════════════════════════════ -->
     <Teleport to="body">
       <div v-if="showPdfConfirm" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" @click.self="cancelPdfConfirm">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[80vh] flex flex-col overflow-hidden animate-modal-in">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[80vh] flex flex-col overflow-hidden animate-modal-in">
 
           <!-- Header -->
           <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
@@ -776,9 +795,10 @@ const confirmPdfUpload = async () => {
               :key="match.filename"
               class="flex items-start gap-3 rounded-lg p-3 border group"
               :class="{
-                'bg-gray-50 border-gray-100': match.status === 'linked',
-                'bg-red-50 border-red-100': match.status === 'no_match',
-                'bg-yellow-50 border-yellow-100': match.status === 'exists'
+                'bg-blue-50 border-blue-100': match.manualResearchId,
+                'bg-gray-50 border-gray-100': !match.manualResearchId && match.status === 'linked',
+                'bg-red-50 border-red-100': !match.manualResearchId && match.status === 'no_match',
+                'bg-yellow-50 border-yellow-100': !match.manualResearchId && match.status === 'exists'
               }"
             >
               <div class="text-blue-500 text-lg mt-0.5 shrink-0">📄</div>
@@ -801,6 +821,26 @@ const confirmPdfUpload = async () => {
                         <span class="font-bold flex items-center gap-1">⚠️ Record Already Has File <span class="text-[10px] font-normal italic">(Will skip)</span></span>
                         <span class="truncate font-medium text-gray-700 mt-0.5">{{ match.record?.title }}</span>
                     </div>
+                </div>
+
+                <div v-if="pdfManualRecords.length" class="mt-3 rounded-lg border border-gray-200 bg-white p-2">
+                  <label class="mb-1 block text-[10px] font-bold uppercase tracking-wide text-gray-500">
+                    Manual link to empty record
+                  </label>
+                  <select
+                    v-model="match.manualResearchId"
+                    class="w-full rounded-md border border-gray-300 bg-white px-2 py-1.5 text-xs text-gray-700 focus:border-blue-400 focus:outline-none focus:ring-1 focus:ring-blue-400"
+                  >
+                    <option value="">Automatic match / skip</option>
+                    <option
+                      v-for="record in pdfManualRecords"
+                      :key="record.id"
+                      :value="record.id"
+                      :disabled="isManualRecordSelected(record.id, idx)"
+                    >
+                      {{ record.title }} - {{ record.author || 'Unknown author' }} (ID {{ record.id }})
+                    </option>
+                  </select>
                 </div>
 
                 <p v-if="match.hint" class="text-[10px] text-blue-600 mt-1">

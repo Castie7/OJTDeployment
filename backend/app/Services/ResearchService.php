@@ -1462,6 +1462,22 @@ class ResearchService extends BaseService
             ->first();
     }
 
+    public function getRecordsMissingPdf(int $limit = 1000): array
+    {
+        $safeLimit = max(1, min(1000, $limit));
+
+        return $this->researchModel
+            ->select('researches.id, researches.title, researches.author, researches.status, research_details.edition, research_details.isbn_issn')
+            ->join('research_details', 'researches.id = research_details.research_id', 'left')
+            ->groupStart()
+                ->where('researches.file_path', null)
+                ->orWhere('researches.file_path', '')
+            ->groupEnd()
+            ->orderBy('researches.title', 'ASC')
+            ->limit($safeLimit)
+            ->findAll();
+    }
+
     public function purgeResearch(int $id): object
     {
         $item = $this->researchModel
@@ -2331,22 +2347,16 @@ class ResearchService extends BaseService
         return $results;
     }
 
-    public function matchAndAttachPdf($titleCandidate, $file, string $isbnHint = '', string $editionHint = '')
+    private function attachPdfToRecord($record, $file): string
     {
-        $matchResult = $this->findPdfMatch($titleCandidate, $isbnHint, $editionHint);
-        
-        if ($matchResult['status'] === 'no_match') {
-            log_message('info', "[Bulk PDF] No match found for title: {$titleCandidate}");
+        if (!$record) {
             return 'no_match';
         }
-        if ($matchResult['status'] === 'exists') {
-            log_message('info', "[Bulk PDF] All {$titleCandidate} record(s) already have files.");
+
+        if (!empty($record->file_path)) {
             return 'exists';
         }
 
-        $best = $matchResult['record'];
-
-        // --- Step 7: Encrypt and attach ---
         $newName    = $file->getRandomName();
         $targetPath = WRITEPATH . 'uploads/research';
         if (!is_dir($targetPath)) mkdir($targetPath, 0750, true);
@@ -2362,12 +2372,39 @@ class ResearchService extends BaseService
         }
 
         if ($encrypted) {
-            $this->researchModel->update($best->id, ['file_path' => $newName]);
-            $this->queueAndRefreshSearchIndex((int) $best->id, 'pdf_attach', 60);
-            log_message('info', "[Bulk PDF] Linked: {$file->getClientName()} → '{$best->title}' (ID: {$best->id})");
+            $this->researchModel->update($record->id, ['file_path' => $newName]);
+            $this->queueAndRefreshSearchIndex((int) $record->id, 'pdf_attach', 60);
+            log_message('info', "[Bulk PDF] Linked: {$file->getClientName()} to '{$record->title}' (ID: {$record->id})");
             return 'linked';
         }
 
         return 'error_move';
+    }
+
+    public function attachPdfToResearchId(int $researchId, $file): string
+    {
+        if ($researchId <= 0) {
+            return 'no_match';
+        }
+
+        $record = $this->researchModel->find($researchId);
+
+        return $this->attachPdfToRecord($record, $file);
+    }
+
+    public function matchAndAttachPdf($titleCandidate, $file, string $isbnHint = '', string $editionHint = '')
+    {
+        $matchResult = $this->findPdfMatch($titleCandidate, $isbnHint, $editionHint);
+
+        if ($matchResult['status'] === 'no_match') {
+            log_message('info', "[Bulk PDF] No match found for title: {$titleCandidate}");
+            return 'no_match';
+        }
+        if ($matchResult['status'] === 'exists') {
+            log_message('info', "[Bulk PDF] All {$titleCandidate} record(s) already have files.");
+            return 'exists';
+        }
+
+        return $this->attachPdfToRecord($matchResult['record'], $file);
     }
 }
