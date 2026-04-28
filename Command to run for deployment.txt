@@ -1,8 +1,21 @@
 Important commands when deploying
 
+Fresh IIS machine checklist
+1. Install IIS with PHP/FastCGI, IIS URL Rewrite, Composer, Node.js/npm, and MySQL/MariaDB.
+2. Clone/pull this repo.
+3. Copy backend/.env.example to backend/.env and set the real database username, password, host, base URL, and CORS origin.
+4. Point IIS to backend/public as the public web root, not the repo root.
+5. Give the IIS app pool identity modify access to backend/writable.
+6. Run backend dependency setup: composer install --no-dev --optimize-autoloader
+7. Create the database and run: php spark migrate
+8. Generate file encryption keys before uploading real PDFs: php spark keys:generate
+9. Build frontend assets: npm install, then npm run build from frontend.
+10. Make sure the built frontend files are copied into backend/public before using IIS.
+
 Backend
 composer install
 php spark migrate
+php spark keys:generate
 php spark db:seed UsersSeeder
 php spark db:seed ReindexResearchSearchSeeder  (optional: backfill PDF/index search for existing records)
 php spark index:research --limit 200          (optional: process pending index jobs now)
@@ -28,6 +41,7 @@ Resets only admin account (admin@bsu.edu.ph) to default password: 123admin
 Frontend
 npm install
 npm run build
+Copy frontend/dist contents into backend/public if the build did not already output there.
 
 Optional local setup packages
 npm install -D @tailwindcss/postcss
