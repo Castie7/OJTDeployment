@@ -11,7 +11,7 @@ use App\Models\UserModel;
 
 class ResearchService extends BaseService
 {
-    private const DEFAULT_ACCESS_LEVEL = 'public';
+    private const DEFAULT_ACCESS_LEVEL = 'private';
     private const MAX_INDEX_TEXT_CHARS = 120000;
     private const MAX_FALLBACK_PDF_BYTES = 8388608; // 8 MB
     private const OCR_MIN_TRIGGER_TEXT_CHARS = 120;
@@ -208,7 +208,13 @@ class ResearchService extends BaseService
 
     private function normalizeAccessLevel(?string $accessLevel): string
     {
-        return strtolower(trim((string) $accessLevel)) === 'private' ? 'private' : self::DEFAULT_ACCESS_LEVEL;
+        $normalized = strtolower(trim((string) $accessLevel));
+
+        if (in_array($normalized, ['public', 'private'], true)) {
+            return $normalized;
+        }
+
+        return self::DEFAULT_ACCESS_LEVEL;
     }
 
     private function commandExists(string $command): bool
@@ -1555,7 +1561,7 @@ class ResearchService extends BaseService
         ];
 
         if ($this->hasAccessLevelColumn()) {
-            $mainData['access_level'] = $this->normalizeAccessLevel($data['access_level'] ?? self::DEFAULT_ACCESS_LEVEL);
+            $mainData['access_level'] = self::DEFAULT_ACCESS_LEVEL;
         }
 
         $newResearchId = $this->researchModel->insert($mainData);

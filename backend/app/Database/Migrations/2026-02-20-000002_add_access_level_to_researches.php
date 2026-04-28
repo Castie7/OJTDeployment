@@ -17,7 +17,7 @@ class AddAccessLevelToResearches extends Migration
                 'access_level' => [
                     'type' => 'VARCHAR',
                     'constraint' => 20,
-                    'default' => 'public',
+                    'default' => 'private',
                     'null' => false,
                     'after' => 'status',
                 ],
@@ -27,7 +27,7 @@ class AddAccessLevelToResearches extends Migration
         $this->db->table('researches')
             ->where('access_level', null)
             ->orWhere('access_level', '')
-            ->set(['access_level' => 'public'])
+            ->set(['access_level' => 'private'])
             ->update();
     }
 

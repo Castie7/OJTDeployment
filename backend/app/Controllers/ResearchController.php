@@ -124,7 +124,7 @@ class ResearchController extends BaseController
         // Guard against model returning array vs entity object to prevent fatals
         $status      = is_object($research) ? $research->status       : ($research['status'] ?? null);
         $uploadedBy  = is_object($research) ? $research->uploaded_by  : ($research['uploaded_by'] ?? null);
-        $accessLevel = is_object($research) ? $research->access_level : ($research['access_level'] ?? 'public');
+        $accessLevel = is_object($research) ? ($research->access_level ?? 'private') : ($research['access_level'] ?? 'private');
 
         if ($status === 'approved') {
             // Approved and Public: Anyone can access
@@ -199,7 +199,9 @@ class ResearchController extends BaseController
 
     private function normalizeAccessLevel(?string $accessLevel): string
     {
-        return strtolower(trim((string) $accessLevel)) === 'private' ? 'private' : 'public';
+        $normalized = strtolower(trim((string) $accessLevel));
+
+        return in_array($normalized, ['public', 'private'], true) ? $normalized : 'private';
     }
 
     private function parseBooleanQueryValue(?string $value): bool
@@ -512,11 +514,8 @@ class ResearchController extends BaseController
                 }
             }
 
-            if ($user->role === 'admin' && array_key_exists('access_level', $input)) {
-                $input['access_level'] = $this->normalizeAccessLevel((string) $input['access_level']);
-            } else {
-                unset($input['access_level']);
-            }
+            // New uploads always start private. Admins can publish them later from Masterlist.
+            $input['access_level'] = 'private';
 
             // Validate
             $validation = \Config\Services::validation();

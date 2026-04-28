@@ -15,7 +15,7 @@ export function useMasterlist() {
     const currentPage = ref(1)
     const itemsPerPage = 10
     const selectedResearchIds = ref<number[]>([])
-    const bulkAccessLevel = ref<'public' | 'private'>('public')
+    const bulkAccessLevel = ref<'public' | 'private'>('private')
     const bulkIsProcessing = ref(false)
 
     // Edit Modal State
@@ -28,7 +28,7 @@ export function useMasterlist() {
         title: '',
         author: '',
         crop_variation: '',
-        access_level: 'public' as 'public' | 'private',
+        access_level: 'private' as 'public' | 'private',
         start_date: '',
         deadline_date: '',
         knowledge_type: [] as string[],
@@ -212,7 +212,7 @@ export function useMasterlist() {
             title: item.title,
             author: item.author,
             crop_variation: item.crop_variation || '',
-            access_level: item.access_level || 'public',
+            access_level: item.access_level || 'private',
             start_date: toDateInputFormat(item.start_date),
             deadline_date: toDateInputFormat(item.deadline_date),
             knowledge_type: item.knowledge_type ? item.knowledge_type.split(',').map(s => s.trim()) : [],
@@ -260,7 +260,7 @@ export function useMasterlist() {
         formData.append('title', form.title)
         formData.append('author', form.author)
         formData.append('crop_variation', form.crop_variation)
-        formData.append('access_level', form.access_level || 'public')
+        formData.append('access_level', form.access_level || 'private')
         formData.append('start_date', form.start_date)
         formData.append('deadline_date', form.deadline_date)
 

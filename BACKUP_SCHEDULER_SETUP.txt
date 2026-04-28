@@ -1,0 +1,337 @@
+OJT2 WINDOWS BACKUP SCHEDULER SETUP
+===================================
+
+Purpose
+-------
+Use this guide when deploying OJT2 on a Windows computer that also acts as the
+IIS server. This creates an automatic backup for the database, uploaded files,
+encryption keys, and environment file.
+
+Important:
+- A Git pull only restores the source code.
+- Real system data also needs the MySQL database, uploaded files, encryption
+  keys, and backend/.env.
+- Do not save backups only inside C:\inetpub\wwwroot. Use another drive,
+  external drive, NAS, or another computer.
+
+
+WHAT TO BACK UP
+---------------
+
+1. MySQL database:
+   rootcrop_db
+
+2. Uploaded research files:
+   C:\inetpub\wwwroot\OJT2\backend\writable\uploads
+
+3. Encryption keys:
+   C:\inetpub\wwwroot\OJT2\backend\writable\keys
+
+4. Environment file:
+   C:\inetpub\wwwroot\OJT2\backend\.env
+
+5. Optional weekly code snapshot:
+   C:\inetpub\wwwroot\OJT2\backend
+   C:\inetpub\wwwroot\OJT2\frontend
+
+
+RECOMMENDED SCHEDULE
+--------------------
+
+Daily:
+- Database dump
+- Uploaded files
+- Encryption keys
+- backend/.env
+
+Weekly:
+- Full project folder snapshot
+
+Retention:
+- Keep daily backups for 30 days.
+- Keep at least one weekly backup offline or on another computer.
+
+
+STEP 1 - CREATE BACKUP FOLDERS
+------------------------------
+
+Create these folders:
+
+  C:\OJT2_BackupTools
+  D:\OJT2_Backups
+
+You can change D:\OJT2_Backups to an external drive, NAS, or another safe
+location. Avoid saving the only backup on the same drive as the server.
+
+
+STEP 2 - FIND MYSQLDUMP.EXE
+---------------------------
+
+Open Command Prompt or PowerShell and run:
+
+  where mysqldump
+
+If it says it cannot find mysqldump, locate it manually. Common locations are:
+
+  C:\xampp\mysql\bin\mysqldump.exe
+  C:\laragon\bin\mysql\mysql-8.0\bin\mysqldump.exe
+  C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqldump.exe
+
+You will put the correct path in the backup script below.
+
+
+STEP 3 - CREATE A MYSQL BACKUP LOGIN FILE
+-----------------------------------------
+
+Create this file:
+
+  C:\OJT2_BackupTools\mysql-backup.cnf
+
+Put this inside it:
+
+  [client]
+  user=root
+  password=PUT_MYSQL_PASSWORD_HERE
+  host=localhost
+  port=3306
+
+Replace PUT_MYSQL_PASSWORD_HERE with the real MySQL password.
+
+Protect this file because it contains the database password:
+
+  icacls "C:\OJT2_BackupTools\mysql-backup.cnf" /inheritance:r
+  icacls "C:\OJT2_BackupTools\mysql-backup.cnf" /grant:r "%USERNAME%:R"
+
+If the scheduled task will run as another Windows account, also give that
+account read permission to this file.
+
+
+STEP 4 - CREATE THE BACKUP SCRIPT
+---------------------------------
+
+Create this file:
+
+  C:\OJT2_BackupTools\backup-ojt2.ps1
+
+Paste this script inside it:
+
+  $ErrorActionPreference = "Stop"
+
+  $ProjectRoot = "C:\inetpub\wwwroot\OJT2"
+  $BackupBase = "D:\OJT2_Backups"
+  $MysqlDump = "C:\xampp\mysql\bin\mysqldump.exe"
+  $MysqlOptions = "C:\OJT2_BackupTools\mysql-backup.cnf"
+  $DatabaseName = "rootcrop_db"
+  $RetentionDays = 30
+
+  $Date = Get-Date -Format "yyyy-MM-dd_HHmmss"
+  $BackupRoot = Join-Path $BackupBase $Date
+  $DumpFile = Join-Path $BackupRoot "rootcrop_db.sql"
+  $DataZip = Join-Path $BackupRoot "ojt2-app-data.zip"
+  $WeeklyZip = Join-Path $BackupRoot "ojt2-project-weekly.zip"
+  $LogFile = Join-Path $BackupRoot "backup.log"
+
+  New-Item -ItemType Directory -Force -Path $BackupRoot | Out-Null
+
+  Start-Transcript -Path $LogFile -Append
+
+  try {
+      if ($BackupBase -match "^[A-Za-z]:\\?$") {
+          throw "BackupBase must be a dedicated folder, not the root of a drive."
+      }
+
+      if (!(Test-Path $MysqlDump)) {
+          throw "mysqldump.exe was not found. Update `$MysqlDump in this script."
+      }
+
+      if (!(Test-Path $MysqlOptions)) {
+          throw "MySQL option file was not found: $MysqlOptions"
+      }
+
+      $RequiredPaths = @(
+          "$ProjectRoot\backend\writable\uploads",
+          "$ProjectRoot\backend\writable\keys",
+          "$ProjectRoot\backend\.env"
+      )
+
+      foreach ($Path in $RequiredPaths) {
+          if (!(Test-Path $Path)) {
+              throw "Required backup path was not found: $Path"
+          }
+      }
+
+      Write-Host "Backing up MySQL database..."
+
+      $DumpArgs = @(
+          "--defaults-extra-file=$MysqlOptions",
+          "--single-transaction",
+          "--routines",
+          "--triggers",
+          "--events",
+          "--default-character-set=utf8mb4",
+          "--result-file=$DumpFile",
+          $DatabaseName
+      )
+
+      & $MysqlDump @DumpArgs
+
+      if ($LASTEXITCODE -ne 0) {
+          throw "mysqldump failed with exit code $LASTEXITCODE"
+      }
+
+      if (!(Test-Path $DumpFile) -or ((Get-Item $DumpFile).Length -lt 100)) {
+          throw "Database dump was not created correctly."
+      }
+
+      Write-Host "Backing up uploads, keys, and .env..."
+
+      Compress-Archive -Path `
+          "$ProjectRoot\backend\writable\uploads", `
+          "$ProjectRoot\backend\writable\keys", `
+          "$ProjectRoot\backend\.env" `
+          -DestinationPath $DataZip `
+          -Force
+
+      if ((Get-Date).DayOfWeek -eq "Sunday") {
+          Write-Host "Creating weekly project snapshot..."
+
+          Compress-Archive -Path `
+              "$ProjectRoot\backend", `
+              "$ProjectRoot\frontend", `
+              "$ProjectRoot\Command to run for deployment.txt" `
+              -DestinationPath $WeeklyZip `
+              -Force
+      }
+
+      Write-Host "Deleting backups older than $RetentionDays days..."
+
+      Get-ChildItem $BackupBase -Directory |
+          Where-Object { $_.LastWriteTime -lt (Get-Date).AddDays(-$RetentionDays) } |
+          Remove-Item -Recurse -Force
+
+      Write-Host "Backup completed successfully: $BackupRoot"
+      Stop-Transcript
+      exit 0
+  }
+  catch {
+      Write-Error $_
+      Stop-Transcript
+      exit 1
+  }
+
+Before using the script, update this line if your mysqldump.exe is somewhere
+else:
+
+  $MysqlDump = "C:\xampp\mysql\bin\mysqldump.exe"
+
+
+STEP 5 - TEST THE BACKUP SCRIPT MANUALLY
+----------------------------------------
+
+Open PowerShell and run:
+
+  powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\OJT2_BackupTools\backup-ojt2.ps1"
+
+After running, check:
+
+  D:\OJT2_Backups
+
+Each successful backup folder should contain:
+
+  rootcrop_db.sql
+  ojt2-app-data.zip
+  backup.log
+
+On Sundays, it should also contain:
+
+  ojt2-project-weekly.zip
+
+
+STEP 6 - CREATE WINDOWS TASK SCHEDULER JOB
+------------------------------------------
+
+Option A: Use Task Scheduler UI
+
+1. Open Task Scheduler.
+2. Click Create Task.
+3. General tab:
+   - Name: OJT2 Daily Backup
+   - Select: Run whether user is logged on or not
+   - Select: Run with highest privileges
+4. Triggers tab:
+   - New
+   - Daily
+   - Choose a time after office hours, for example 11:00 PM
+5. Actions tab:
+   - New
+   - Program/script:
+       powershell.exe
+   - Add arguments:
+       -NoProfile -ExecutionPolicy Bypass -File "C:\OJT2_BackupTools\backup-ojt2.ps1"
+6. Conditions tab:
+   - If using a laptop, uncheck "Start the task only if the computer is on AC power"
+     if needed.
+7. Settings tab:
+   - Enable "Run task as soon as possible after a scheduled start is missed"
+   - Enable "Stop the task if it runs longer than" 2 hours
+8. Click OK and enter the Windows account password if asked.
+
+
+Option B: Create the scheduled task by command
+
+Run Command Prompt as Administrator:
+
+  schtasks /Create /TN "OJT2 Daily Backup" /SC DAILY /ST 23:00 /TR "powershell.exe -NoProfile -ExecutionPolicy Bypass -File C:\OJT2_BackupTools\backup-ojt2.ps1" /RL HIGHEST
+
+
+STEP 7 - RESTORE CHECKLIST FOR A NEW COMPUTER
+---------------------------------------------
+
+If the server is moved to a new Windows computer:
+
+1. Install IIS, PHP, MySQL, Composer, and Node.js if needed.
+2. Put the project code back in:
+
+   C:\inetpub\wwwroot\OJT2
+
+3. Restore backend\.env from the backup.
+4. Restore backend\writable\uploads from ojt2-app-data.zip.
+5. Restore backend\writable\keys from ojt2-app-data.zip.
+6. Import the database:
+
+   mysql -u root -p rootcrop_db < rootcrop_db.sql
+
+7. Confirm backend\.env has the correct production values:
+
+   CI_ENVIRONMENT = production
+   database.default.DBDebug = false
+
+8. Restart IIS:
+
+   iisreset
+
+9. Log in and test:
+   - Login
+   - Dashboard
+   - Research Library
+   - File download/viewing
+   - Import Data
+   - User Management
+
+
+MONTHLY BACKUP TEST
+-------------------
+
+At least once a month, test one backup on another computer or temporary
+database. A backup is only reliable if it can be restored.
+
+
+SECURITY NOTES
+--------------
+
+- Keep mysql-backup.cnf private because it contains the database password.
+- Keep backend\.env private.
+- Keep backend\writable\keys private. Losing the keys may make encrypted files
+  impossible to read.
+- Do not upload backup ZIP files to the public web folder.
+- Keep one offline backup copy for protection against ransomware.

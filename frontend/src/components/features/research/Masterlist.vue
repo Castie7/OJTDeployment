@@ -99,8 +99,8 @@ const cropOptions = [
 
 const conditionOptions = ['New', 'Good', 'Fair', 'Poor', 'Damaged'].map(c => ({ value: c, label: c }))
 const accessOptions = [
-  { value: 'public', label: 'Public' },
-  { value: 'private', label: 'Private (Login Required)' }
+  { value: 'private', label: 'Private (Login Required)' },
+  { value: 'public', label: 'Public' }
 ]
 </script>
 
@@ -272,8 +272,8 @@ const accessOptions = [
             v-model="bulkAccessLevel"
             class="h-10 rounded-xl border border-emerald-200 bg-white px-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-300"
           >
-            <option value="public">Set to Public</option>
             <option value="private">Set to Private (Login Required)</option>
+            <option value="public">Set to Public</option>
           </select>
 
           <BaseButton
