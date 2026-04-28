@@ -51,7 +51,7 @@ const propsDef = defineProps<{
 }>()
 
 watch(() => propsDef.research, (newVal) => {
-  if (newVal && newVal.id) {
+  if (newVal && newVal.id && newVal.file_path) {
     loadPdf(newVal.id)
   } else {
     clearPdf()

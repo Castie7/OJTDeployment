@@ -23,6 +23,8 @@ const {
   isModalOpen, 
   isEasyResubmitModalOpen,
   isSubmitting, 
+  similarTitleMatches,
+  isCheckingSimilarTitles,
   form, 
   errors,
   openSubmitModal, 
@@ -244,6 +246,24 @@ const conditionOptions = [
                         placeholder="Enter full title..."
                         :error="errors.title"
                     />
+
+                    <p v-if="isCheckingSimilarTitles && !similarTitleMatches.length" class="text-[11px] font-medium text-amber-700">
+                        Checking similar titles...
+                    </p>
+
+                    <div v-else-if="similarTitleMatches.length" class="rounded-lg border border-amber-200 bg-amber-50 p-3">
+                        <p class="text-xs font-bold text-amber-800">Similar title found</p>
+                        <div
+                          v-for="match in similarTitleMatches"
+                          :key="match.id"
+                          class="mt-2 rounded border border-amber-100 bg-white px-2 py-1.5 text-xs text-gray-700"
+                        >
+                          <span class="font-semibold">{{ match.title }}</span>
+                          <span class="block text-[10px] text-gray-500">
+                            By {{ match.author }}<span v-if="match.edition"> - {{ match.edition }}</span> - {{ match.similarity }}% similar
+                          </span>
+                        </div>
+                    </div>
 
                     <BaseInput 
                         v-model="form.author" 

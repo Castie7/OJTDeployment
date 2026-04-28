@@ -48,6 +48,15 @@ export interface Research {
   link?: string
 }
 
+export interface SimilarTitleMatch {
+  id: number
+  title: string
+  author: string
+  status?: string
+  edition?: string
+  similarity: number
+}
+
 export interface WorkspaceStorageFile {
   id: number
   item_type: 'file'

@@ -1547,6 +1547,92 @@ class ResearchService extends BaseService
         return false;
     }
 
+    private function normalizeTitleForSimilarity(string $title): string
+    {
+        $normalized = mb_strtolower(trim($title));
+        $normalized = preg_replace('/[^\p{L}\p{N}\s]+/u', ' ', $normalized) ?? $normalized;
+        $normalized = preg_replace('/\s+/u', ' ', $normalized) ?? $normalized;
+
+        return trim($normalized);
+    }
+
+    private function getTitleSimilarityTokens(string $title): array
+    {
+        $stopWords = [
+            'about', 'after', 'among', 'based', 'case', 'effect', 'effects', 'from',
+            'into', 'paper', 'research', 'study', 'studies', 'using', 'with',
+        ];
+
+        $tokens = preg_split('/\s+/u', $this->normalizeTitleForSimilarity($title)) ?: [];
+        $tokens = array_values(array_unique(array_filter($tokens, static function ($token) use ($stopWords): bool {
+            $token = trim((string) $token);
+            return mb_strlen($token) >= 4 && !in_array($token, $stopWords, true);
+        })));
+
+        return array_slice($tokens, 0, 6);
+    }
+
+    public function findSimilarTitles(string $title, ?int $excludeId = null, int $limit = 5): array
+    {
+        $normalizedTitle = $this->normalizeTitleForSimilarity($title);
+        if (mb_strlen($normalizedTitle) < 4) {
+            return [];
+        }
+
+        $tokens = $this->getTitleSimilarityTokens($title);
+        $builder = $this->researchModel
+            ->select('researches.id, researches.title, researches.author, researches.status, research_details.edition')
+            ->join('research_details', 'researches.id = research_details.research_id', 'left');
+
+        if ($excludeId !== null && $excludeId > 0) {
+            $builder->where('researches.id !=', $excludeId);
+        }
+
+        $builder->groupStart();
+        if (!empty($tokens)) {
+            foreach ($tokens as $token) {
+                $builder->orLike('researches.title', $token);
+            }
+        } else {
+            $builder->like('researches.title', $normalizedTitle);
+        }
+        $builder->groupEnd();
+
+        $candidates = $builder
+            ->orderBy('researches.created_at', 'DESC')
+            ->limit(80)
+            ->findAll();
+
+        $matches = [];
+        foreach ($candidates as $candidate) {
+            $candidateTitle = $this->normalizeTitleForSimilarity((string) ($candidate->title ?? ''));
+            if ($candidateTitle === '') {
+                continue;
+            }
+
+            similar_text($normalizedTitle, $candidateTitle, $percent);
+            $containsMatch = str_contains($candidateTitle, $normalizedTitle) || str_contains($normalizedTitle, $candidateTitle);
+            $score = $containsMatch ? max($percent, 88.0) : $percent;
+
+            if ($score < 62.0) {
+                continue;
+            }
+
+            $matches[] = [
+                'id' => (int) $candidate->id,
+                'title' => $candidate->title,
+                'author' => $candidate->author ?? 'Unknown',
+                'status' => $candidate->status ?? '',
+                'edition' => $candidate->edition ?? '',
+                'similarity' => (int) round($score),
+            ];
+        }
+
+        usort($matches, static fn ($a, $b): int => ($b['similarity'] <=> $a['similarity']) ?: strcmp($a['title'], $b['title']));
+
+        return array_slice($matches, 0, max(1, min(10, $limit)));
+    }
+
     public function createResearch(int $userId, array $data, $file)
     {
         $this->db->transStart();
@@ -1974,7 +2060,8 @@ class ResearchService extends BaseService
             'subjects' => $rawData['Subjects'] ?? $rawData['Description'] ?? '',
             'shelf_location' => $rawData['Location'] ?? '',
             'item_condition' => $rawData['Condition'] ?? 'Good',
-            'crop_variation' => $rawData['Crop'] ?? ''
+            'crop_variation' => $rawData['Crop'] ?? '',
+            'link' => $rawData['Link'] ?? $rawData['URL'] ?? $rawData['External Link'] ?? $rawData['Website'] ?? ''
         ];
 
         // 🚨 ADDED VALIDATION: Run data against rules before inserting
@@ -1992,6 +2079,7 @@ class ResearchService extends BaseService
             'shelf_location' => 'permit_empty|max_length[100]',
             'item_condition' => 'permit_empty|max_length[50]',
             'crop_variation' => 'permit_empty|max_length[100]',
+            'link' => 'permit_empty|valid_url_strict',
         ];
         
         $validation->setRules($validationRules);
@@ -2040,7 +2128,7 @@ class ResearchService extends BaseService
                 'subjects' => $data['subjects'],
                 'shelf_location' => $data['shelf_location'],
                 'item_condition' => $data['item_condition'],
-                'link' => ''
+                'link' => $data['link']
             ];
             $this->detailsModel->insert($detailsData);
         }
@@ -2101,7 +2189,10 @@ class ResearchService extends BaseService
 
             $matches = $existingMap[strtolower($title)] ?? [];
             if (empty($matches)) {
-                $results[$idx] = ['status' => 'new'];
+                $similarTitles = $this->findSimilarTitles($title, null, 3);
+                $results[$idx] = empty($similarTitles)
+                    ? ['status' => 'new']
+                    : ['status' => 'similar_title', 'similar_titles' => $similarTitles];
                 continue;
             }
 
@@ -2170,6 +2261,7 @@ class ResearchService extends BaseService
             'ISBN/ISSN', 'ISSN', 'ISBN',
             'Subjects', 'Description',
             'Location', 'Condition', 'Crop',
+            'Link', 'URL', 'External Link', 'Website',
         ];
         $unknownColumns = array_values(array_diff($headers, $knownColumns));
         if (!empty($unknownColumns)) {

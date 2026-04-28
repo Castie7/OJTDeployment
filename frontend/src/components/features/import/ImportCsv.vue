@@ -36,10 +36,11 @@ const KNOWN_COLUMNS = new Set([
     'ISBN/ISSN', 'ISSN', 'ISBN',
     'Subjects', 'Description',
     'Location', 'Condition', 'Crop',
+    'Link', 'URL', 'External Link', 'Website',
 ])
 
 const TEMPLATE_COLUMNS = ['Title', 'Author', 'Type', 'Date', 'Edition', 'Publisher',
-    'Pages', 'ISBN/ISSN', 'Subjects', 'Location', 'Condition', 'Crop']
+    'Pages', 'ISBN/ISSN', 'Subjects', 'Location', 'Condition', 'Crop', 'Link']
 
 const previewPage = ref(0)
 const PREVIEW_PAGE_SIZE = 10
@@ -85,19 +86,19 @@ const handleFileChange = (event: Event | DragEvent) => {
 const downloadTemplate = () => {
     const headers = [
         'Title', 'Author', 'Type', 'Date', 'Edition', 'Publisher',
-        'Pages', 'ISBN/ISSN', 'Subjects', 'Location', 'Condition', 'Crop'
+        'Pages', 'ISBN/ISSN', 'Subjects', 'Location', 'Condition', 'Crop', 'Link'
     ];
 
     const rows = [
         [
             'Golden Roots Issue No. 01', 'Betty T. Gayao et al.', 'Journal', '2004-01-01',
             'Vol. 1', 'NPRCRTC - BSU', '16 Pages', 'ISSN 1656-5444',
-            'Sweetpotato processing, Rootcrops', 'Shelf 6b', 'Good', 'Sweetpotato'
+            'Sweetpotato processing, Rootcrops', 'Shelf 6b', 'Good', 'Sweetpotato', 'https://example.com/golden-roots'
         ],
         [
             'Varietal Improvement of Rootcrops', 'Juan Dela Cruz', 'Thesis', '2023-05-15',
             '1st Edition', 'BSU', '120 Leaves', 'N/A',
-            'Breeding, Genetics', 'Thesis Section', 'Good', 'Cassava'
+            'Breeding, Genetics', 'Thesis Section', 'Good', 'Cassava', ''
         ]
     ];
     const processRow = (row: string[]) => row.map(val => `"${val}"`).join(',');
@@ -293,6 +294,16 @@ const selectedPdfs = ref<File[]>([])
 const isPdfUploading = ref(false)
 const pdfStatus = ref<{ message: string, type: 'success' | 'error' | '', details?: string[] }>({ message: '', type: '', details: [] })
 const showPdfConfirm = ref(false)
+const MAX_PDF_FILE_BYTES = 128 * 1024 * 1024
+const MAX_BULK_UPLOAD_BYTES = 240 * 1024 * 1024
+
+const clearSelectedPdfs = (input?: HTMLInputElement | null) => {
+    selectedPdfs.value = []
+    pdfPreviewMatches.value = []
+    pdfManualRecords.value = []
+    showPdfConfirm.value = false
+    if (input) input.value = ''
+}
 
 const handlePdfChange = (event: Event | DragEvent) => {
     let files: FileList | null = null;
@@ -307,16 +318,51 @@ const handlePdfChange = (event: Event | DragEvent) => {
     if (files && files.length) {
         if (files.length > 10) {
             showToast("You can only upload a maximum of 10 files at a time.", "warning")
-            if (event.target instanceof HTMLInputElement) event.target.value = ''
-            selectedPdfs.value = []
+            clearSelectedPdfs(event.target instanceof HTMLInputElement ? event.target : pdfInput.value)
             return
         }
-        selectedPdfs.value = Array.from(files)
+
+        const pdfs = Array.from(files)
+        const invalidFile = pdfs.find(file => !file.name.toLowerCase().endsWith('.pdf'))
+        if (invalidFile) {
+            showToast(`Only PDF files are allowed. Please remove "${invalidFile.name}".`, "error")
+            clearSelectedPdfs(event.target instanceof HTMLInputElement ? event.target : pdfInput.value)
+            return
+        }
+
+        const oversizedFile = pdfs.find(file => file.size > MAX_PDF_FILE_BYTES)
+        if (oversizedFile) {
+            showToast(`"${oversizedFile.name}" is over 128 MB. Please use a smaller PDF.`, "error")
+            clearSelectedPdfs(event.target instanceof HTMLInputElement ? event.target : pdfInput.value)
+            return
+        }
+
+        const totalSize = pdfs.reduce((sum, file) => sum + file.size, 0)
+        if (totalSize > MAX_BULK_UPLOAD_BYTES) {
+            showToast("The selected PDFs are over the safe bulk limit of 240 MB. Upload fewer files at a time.", "error")
+            clearSelectedPdfs(event.target instanceof HTMLInputElement ? event.target : pdfInput.value)
+            return
+        }
+
+        selectedPdfs.value = pdfs
         pdfStatus.value = { message: '', type: '', details: [] }
-        showPdfConfirm.value = false
-        pdfPreviewMatches.value = []
-        pdfManualRecords.value = []
+        clearSelectedPdfs(null)
+        selectedPdfs.value = pdfs
     }
+}
+
+const getUploadErrorMessage = (error: any): string => {
+    const status = error.response?.status
+    const serverMessage = error.response?.data?.message
+
+    if (serverMessage) return serverMessage
+    if (status === 413) return 'Upload is too large. Please upload fewer or smaller PDFs.'
+    if (status === 401) return 'Your session expired. Please log in again.'
+    if (status === 403) return 'The server rejected the request. Please refresh the page and try again.'
+    if (status >= 500) return 'The server hit an error while processing the upload. Please try again.'
+    if (!error.response) return 'Could not reach the server. Please check that IIS is running and your network is connected.'
+
+    return 'Upload failed. Please try again.'
 }
 
 // Parsed title info for confirmation display
@@ -448,7 +494,7 @@ const confirmPdfUpload = async () => {
 
     } catch (error: any) {
         console.error(error)
-        const msg = error.response?.data?.message || 'Server Connection Failed'
+        const msg = getUploadErrorMessage(error)
         pdfStatus.value = { message: msg, type: 'error' }
         showToast(msg, 'error')
     } finally {
@@ -690,7 +736,8 @@ const confirmPdfUpload = async () => {
                   class="transition-colors"
                   :class="{
                      'bg-red-50 hover:bg-red-100/50': csvDuplicates[paginatedStartIndex + i]?.status?.startsWith('duplicate'),
-                     'hover:bg-blue-50/30': !csvDuplicates[paginatedStartIndex + i]?.status?.startsWith('duplicate')
+                     'bg-amber-50 hover:bg-amber-100/50': csvDuplicates[paginatedStartIndex + i]?.status === 'similar_title',
+                     'hover:bg-blue-50/30': !csvDuplicates[paginatedStartIndex + i]?.status?.startsWith('duplicate') && csvDuplicates[paginatedStartIndex + i]?.status !== 'similar_title'
                   }"
                 >
                   <td class="border border-gray-200 px-3 py-1.5 text-gray-400 text-center">{{ paginatedStartIndex + i + 1 }}</td>
@@ -711,13 +758,19 @@ const confirmPdfUpload = async () => {
                       @vue:mounted="($event: any) => $event.el.focus()"
                     />
                     <!-- Display state -->
-                    <div v-else class="px-2 py-1 min-h-[24px] flex items-center" :class="{'text-red-800 font-medium': col === 'Title' && csvDuplicates[paginatedStartIndex + i]?.status?.startsWith('duplicate')}">
+                    <div v-else class="px-2 py-1 min-h-[24px] flex items-center" :class="{
+                      'text-red-800 font-medium': col === 'Title' && csvDuplicates[paginatedStartIndex + i]?.status?.startsWith('duplicate'),
+                      'text-amber-800 font-medium': col === 'Title' && csvDuplicates[paginatedStartIndex + i]?.status === 'similar_title'
+                    }">
                       <span v-if="row[col]" class="text-gray-800" :class="{'line-through opacity-70': csvDuplicates[paginatedStartIndex + i]?.status?.startsWith('duplicate')}">{{ row[col] }}</span>
                       <span v-else class="text-gray-300 italic">empty</span>
                       <span class="ml-auto text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity text-[10px]">✏️</span>
                     </div>
                   </td>
-                  <td class="border border-gray-200 px-2 py-1.5 text-xs text-center border-l-2" :class="{'border-l-red-200': csvDuplicates[paginatedStartIndex + i]?.status?.startsWith('duplicate')}">
+                  <td class="border border-gray-200 px-2 py-1.5 text-xs text-center border-l-2" :class="{
+                    'border-l-red-200': csvDuplicates[paginatedStartIndex + i]?.status?.startsWith('duplicate'),
+                    'border-l-amber-300': csvDuplicates[paginatedStartIndex + i]?.status === 'similar_title'
+                  }">
                     <div v-if="csvDuplicates[paginatedStartIndex + i]?.status === 'duplicate_with_pdf'" class="text-red-700 font-bold flex flex-col gap-0.5">
                         <span title="This record will be skipped because it already exists in the database.">⚠️ Duplicate</span>
                         <span class="text-[9px] font-normal bg-red-100 px-1 py-0.5 rounded text-red-800 inline-block">Already has PDF</span>
@@ -725,6 +778,15 @@ const confirmPdfUpload = async () => {
                     <div v-else-if="csvDuplicates[paginatedStartIndex + i]?.status === 'duplicate_no_pdf'" class="text-yellow-700 font-bold flex flex-col gap-0.5">
                         <span title="This record will be skipped because a record with this Title/Author exists.">⚠️ Duplicate</span>
                         <span class="text-[9px] font-normal opacity-80">(No PDF linked)</span>
+                    </div>
+                    <div v-else-if="csvDuplicates[paginatedStartIndex + i]?.status === 'similar_title'" class="text-amber-700 font-bold flex flex-col gap-0.5">
+                        <span title="A similar title already exists. Review before importing.">Similar title</span>
+                        <span
+                          class="text-[9px] font-normal opacity-80 truncate max-w-[160px]"
+                          :title="csvDuplicates[paginatedStartIndex + i]?.similar_titles?.[0]?.title"
+                        >
+                          {{ csvDuplicates[paginatedStartIndex + i]?.similar_titles?.[0]?.title }}
+                        </span>
                     </div>
                     <span v-else-if="csvDuplicates[paginatedStartIndex + i]?.status === 'new'" class="text-green-600 font-medium whitespace-nowrap">✨ New Record</span>
                     <span v-else class="text-gray-400 animate-pulse">Checking...</span>

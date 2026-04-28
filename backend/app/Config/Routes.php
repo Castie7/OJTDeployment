@@ -55,6 +55,7 @@ $routes->group('OJT2', function($routes) {
 
         $routes->get('/', 'ResearchController::index');
         $routes->get('top-viewed', 'ResearchController::topViewed');
+        $routes->get('similar-titles', 'ResearchController::similarTitles', ['filter' => 'auth']);
         $routes->get('(:num)', 'ResearchController::show/$1', ['filter' => 'auth']);
         $routes->get('archived', 'ResearchController::archived', ['filter' => 'auth']);
         $routes->get('my-submissions', 'ResearchController::mySubmissions', ['filter' => 'auth']);

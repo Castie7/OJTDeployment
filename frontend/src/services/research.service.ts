@@ -6,7 +6,8 @@ import type {
   Research,
   ResearchFilters,
   ApiResponse,
-  Comment
+  Comment,
+  SimilarTitleMatch
 } from '../types'
 
 interface BulkAccessLevelResponse {
@@ -220,6 +221,15 @@ export const researchService = {
   async trackView(id: number): Promise<void> {
     await api.post(`research/${id}/view`)
     apiCache.invalidate('research:top-viewed')
+  },
+
+  async findSimilarTitles(title: string, excludeId?: number | null): Promise<SimilarTitleMatch[]> {
+    const params = new URLSearchParams()
+    params.append('title', title)
+    if (excludeId) params.append('exclude_id', String(excludeId))
+
+    const response = await api.get<{ status: string, matches: SimilarTitleMatch[] }>(`research/similar-titles?${params.toString()}`)
+    return response.data.matches || []
   },
 
   /**

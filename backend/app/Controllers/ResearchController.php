@@ -1196,4 +1196,25 @@ class ResearchController extends BaseController
             return $this->failServerError('An unexpected server error occurred. Please try again later.');
         }
     }
+
+    public function similarTitles()
+    {
+        $user = $this->validateUser();
+        if (!$user) {
+            return $this->failUnauthorized('Access Denied');
+        }
+
+        $title = $this->parseTextQueryValue($this->request->getGet('title'), 255);
+        if ($title === null || mb_strlen($title) < 4) {
+            return $this->respond(['status' => 'success', 'matches' => []]);
+        }
+
+        $excludeIdRaw = trim((string) $this->request->getGet('exclude_id'));
+        $excludeId = ctype_digit($excludeIdRaw) ? (int) $excludeIdRaw : null;
+
+        return $this->respond([
+            'status' => 'success',
+            'matches' => $this->researchService->findSimilarTitles($title, $excludeId, 5),
+        ]);
+    }
 }

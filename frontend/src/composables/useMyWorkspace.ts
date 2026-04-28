@@ -2,7 +2,7 @@ import { ref, reactive, watch } from 'vue'
 import { researchService } from '../services'
 import { useToast } from './useToast'
 import { useErrorHandler } from './useErrorHandler'
-import type { Research } from '../types'
+import type { Research, SimilarTitleMatch } from '../types'
 
 
 export function useMyWorkspace() {
@@ -13,8 +13,12 @@ export function useMyWorkspace() {
   const isSubmitting = ref(false)
   const isLoading = ref(false)
   const myResearches = ref<Research[]>([])
+  const similarTitleMatches = ref<SimilarTitleMatch[]>([])
+  const isCheckingSimilarTitles = ref(false)
   const { showToast } = useToast()
   const { handleError } = useErrorHandler()
+  let similarTitleTimer: ReturnType<typeof setTimeout> | null = null
+  let similarTitleRequestId = 0
 
   // VALIDATION STATE
   const errors = reactive({
@@ -48,6 +52,16 @@ export function useMyWorkspace() {
     pdf_file: null as File | null,
     resubmit_remarks: ''
   })
+
+  const clearSimilarTitleLookup = () => {
+    if (similarTitleTimer) {
+      clearTimeout(similarTitleTimer)
+      similarTitleTimer = null
+    }
+    similarTitleRequestId += 1
+    similarTitleMatches.value = []
+    isCheckingSimilarTitles.value = false
+  }
 
   // --- ACTIONS ---
 
@@ -114,6 +128,42 @@ export function useMyWorkspace() {
     fetchMyResearches();
   });
 
+  watch(
+    () => [form.title, form.id] as const,
+    ([title, id]) => {
+      if (similarTitleTimer) {
+        clearTimeout(similarTitleTimer)
+        similarTitleTimer = null
+      }
+
+      const trimmedTitle = title.trim()
+      const requestId = ++similarTitleRequestId
+      if (trimmedTitle.length < 4) {
+        similarTitleMatches.value = []
+        isCheckingSimilarTitles.value = false
+        return
+      }
+
+      similarTitleTimer = setTimeout(async () => {
+        isCheckingSimilarTitles.value = true
+        try {
+          const matches = await researchService.findSimilarTitles(trimmedTitle, id)
+          if (requestId === similarTitleRequestId) {
+            similarTitleMatches.value = matches
+          }
+        } catch {
+          if (requestId === similarTitleRequestId) {
+            similarTitleMatches.value = []
+          }
+        } finally {
+          if (requestId === similarTitleRequestId) {
+            isCheckingSimilarTitles.value = false
+          }
+        }
+      }, 400)
+    }
+  )
+
   // Helper function to convert date to YYYY-MM-DD format for date inputs
   const toDateInputFormat = (dateStr?: any) => {
     if (!dateStr) return ''
@@ -136,6 +186,7 @@ export function useMyWorkspace() {
   // 2. OPEN FOR NEW SUBMISSION
   const openSubmitModal = () => {
     Object.keys(errors).forEach(key => (errors as any)[key] = '') // Clear errors
+    clearSimilarTitleLookup()
     Object.assign(form, {
       id: null,
       title: '', author: '', crop_variation: '',
@@ -152,6 +203,7 @@ export function useMyWorkspace() {
   // 3. OPEN FOR EDITING
   const openEditModal = (item: Research) => {
     Object.keys(errors).forEach(key => (errors as any)[key] = '') // Clear errors
+    clearSimilarTitleLookup()
     Object.assign(form, {
       id: item.id,
       title: item.title,
@@ -277,6 +329,8 @@ export function useMyWorkspace() {
     isModalOpen,
     isEasyResubmitModalOpen,
     isSubmitting,
+    similarTitleMatches,
+    isCheckingSimilarTitles,
     form,
     errors,
     fetchMyResearches,

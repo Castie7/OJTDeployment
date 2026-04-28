@@ -2,6 +2,7 @@
 import { computed, watch } from 'vue'
 import { useSubmittedResearches } from '../../../composables/useSubmittedResearches' 
 import { usePdfViewer } from '../../../composables/usePdfViewer'
+import { sanitizeUrl } from '../../../utils/formatters'
 
 import { useAuthStore } from '../../../stores/auth'
 
@@ -44,12 +45,19 @@ const { pdfBlobUrl, isPdfLoading, pdfError, loadPdf, clearPdf } = usePdfViewer()
 
 // Watch for selected research to dynamically load securely via Blob
 watch(() => selectedResearch.value, (newVal) => {
-  if (newVal && newVal.id) {
+  if (newVal && newVal.id && newVal.file_path) {
     loadPdf(newVal.id)
   } else {
     clearPdf()
   }
 })
+
+const openExternalLink = (url?: string | null) => {
+  const safeUrl = sanitizeUrl(url)
+  if (safeUrl) {
+    window.open(safeUrl, '_blank', 'noopener,noreferrer')
+  }
+}
 
 // --- Handle Notification Click ---
 const openNotification = async (researchId: number) => {
@@ -165,14 +173,18 @@ void isSendingComment
               <td class="px-6 py-4 text-right">
                 <div class="flex items-center justify-end gap-2" @click.stop>
                   <button 
-                    v-if="item.status === 'approved' && !isArchived" 
-                    @click.stop="selectedResearch = item" 
+                    v-if="item.status === 'approved' && !isArchived && (item.file_path || sanitizeUrl(item.link))" 
+                    @click.stop="item.file_path ? selectedResearch = item : openExternalLink(item.link)" 
                     class="p-2 rounded-full text-blue-600 hover:bg-blue-50 transition-colors"
-                    title="View PDF"
+                    :title="item.file_path ? 'View PDF' : 'Open external link'"
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <svg v-if="item.file_path" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                    <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 010 5.656l-1.414 1.414a4 4 0 01-5.657-5.657l1.414-1.414" />
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M10.172 13.828a4 4 0 010-5.656l1.414-1.414a4 4 0 015.657 5.657l-1.414 1.414" />
                     </svg>
                   </button>
                   

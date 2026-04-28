@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OJT2 Beginner User Guide</title>
+  <style>
+    :root {
+      color: #172033;
+      font-family: Arial, Helvetica, sans-serif;
+      line-height: 1.35;
+      background: #eef2f5;
+    }
+    body {
+      margin: 0;
+      padding: 24px;
+    }
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border: 1px solid #d7dde5;
+      border-radius: 8px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+    h1 {
+      margin: 0 0 4px;
+      font-size: 28px;
+      color: #064e3b;
+    }
+    .subtitle {
+      margin: 0 0 18px;
+      color: #607086;
+      font-size: 14px;
+    }
+    h2 {
+      margin: 18px 0 8px;
+      font-size: 16px;
+      color: #0f5132;
+      border-bottom: 1px solid #dce7e1;
+      padding-bottom: 4px;
+    }
+    ol, ul {
+      margin: 6px 0 0 22px;
+      padding: 0;
+    }
+    li {
+      margin: 4px 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .box {
+      border: 1px solid #dbe3ea;
+      border-radius: 8px;
+      padding: 12px 14px;
+      background: #fbfcfd;
+    }
+    .warning {
+      border-color: #f6d365;
+      background: #fff8db;
+    }
+    .danger {
+      border-color: #f3b8b8;
+      background: #fff1f1;
+    }
+    .good {
+      border-color: #abdcc7;
+      background: #effaf4;
+    }
+    .label {
+      font-weight: bold;
+      color: #253244;
+    }
+    .small {
+      color: #66788f;
+      font-size: 12px;
+    }
+    code {
+      background: #eef2f5;
+      border: 1px solid #d8e0e7;
+      border-radius: 4px;
+      padding: 1px 4px;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    th, td {
+      text-align: left;
+      vertical-align: top;
+      border: 1px solid #dbe3ea;
+      padding: 7px 8px;
+    }
+    th {
+      background: #f4f7f6;
+      color: #213047;
+    }
+    .footer {
+      margin-top: 18px;
+      padding-top: 12px;
+      border-top: 1px solid #dbe3ea;
+      color: #607086;
+      font-size: 12px;
+    }
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      main {
+        max-width: none;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        padding: 8mm;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      h2 {
+        margin-top: 12px;
+      }
+      .box {
+        break-inside: avoid;
+      }
+    }
+    @media (max-width: 700px) {
+      body {
+        padding: 12px;
+      }
+      main {
+        padding: 18px;
+      }
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <h1>OJT2 Research System: Beginner Guide</h1>
+  <p class="subtitle">Use this as the one-page checklist for daily operation and training.</p>
+
+  <div class="grid">
+    <section class="box good">
+      <h2>Daily Start</h2>
+      <ol>
+        <li>Open the system in the browser using the provided OJT2 link or shortcut.</li>
+        <li>Log in using your assigned account.</li>
+        <li>Use the left menu or dashboard cards to go to Workspace, Library, Masterlist, or Import.</li>
+        <li>If a page does not load, refresh once before trying anything else.</li>
+      </ol>
+    </section>
+
+    <section class="box danger">
+      <h2>If Server Connection Failed Appears</h2>
+      <ol>
+        <li>Close extra browser tabs for the system.</li>
+        <li>On the server computer, double-click the <span class="label">Start IIS</span> shortcut.</li>
+        <li>Wait until the restart window finishes.</li>
+        <li>Open the system again or press refresh.</li>
+        <li>If it still fails, call the IT/admin person.</li>
+      </ol>
+    </section>
+  </div>
+
+  <section class="box">
+    <h2>Submit One Research Item</h2>
+    <ol>
+      <li>Go to <span class="label">My Workspace</span>.</li>
+      <li>Click <span class="label">Submit New Item</span>.</li>
+      <li>Fill in required fields: <span class="label">Type</span>, <span class="label">Title</span>, and <span class="label">Author</span>.</li>
+      <li>Add optional details such as date, edition, publisher, ISBN/ISSN, shelf location, subjects, crop, and condition.</li>
+      <li>Attach a PDF/image if available, or paste an external link in <span class="label">External Link</span>.</li>
+      <li>Click <span class="label">Submit Item</span>.</li>
+    </ol>
+    <p class="small">New uploads start as private and pending. An admin can approve them and change visibility later.</p>
+  </section>
+
+  <section class="box">
+    <h2>Bulk CSV Import</h2>
+    <ol>
+      <li>Go to <span class="label">Import</span>.</li>
+      <li>Click <span class="label">Download Template</span>.</li>
+      <li>Fill the spreadsheet. Keep at least Title and Author.</li>
+      <li>For online-only materials, use the <span class="label">Link</span> column. Accepted aliases are <code>URL</code>, <code>External Link</code>, or <code>Website</code>.</li>
+      <li>Save as <span class="label">CSV UTF-8</span>.</li>
+      <li>Upload the CSV, review the preview table, then click <span class="label">Confirm & Import</span>.</li>
+    </ol>
+  </section>
+
+  <section class="box">
+    <h2>Bulk PDF Upload</h2>
+    <ol>
+      <li>Go to <span class="label">Import</span>, then use <span class="label">Bulk PDF Upload</span>.</li>
+      <li>Name each PDF close to the research title.</li>
+      <li>If there are multiple editions, add a hint in the file name, such as <code>Golden Roots [Vol. 1].pdf</code>.</li>
+      <li>Review the match preview before upload.</li>
+      <li>If a PDF does not match automatically, use <span class="label">Manual link to empty record</span>.</li>
+      <li>If unsure, leave it not linked and ask the admin before uploading.</li>
+    </ol>
+  </section>
+
+  <section class="box">
+    <h2>Viewing Research</h2>
+    <ol>
+      <li>Click a research title from the Library, Workspace, or Masterlist.</li>
+      <li>Read the catalog details: author, edition, publisher, date, subjects, shelf location, and condition.</li>
+      <li>In <span class="label">Digital Access</span>, open the PDF preview if a PDF exists.</li>
+      <li>If an external link exists, click <span class="label">Open External Link / Website</span>.</li>
+      <li>If no PDF or link exists, the item is metadata-only.</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>Warnings And What To Do</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Message</th>
+          <th>Meaning</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="label">Similar title found</span></td>
+          <td>A close title already exists.</td>
+          <td>Review the existing title. Continue only if it is truly a different item.</td>
+        </tr>
+        <tr>
+          <td><span class="label">Duplicate</span></td>
+          <td>The same title/author or record already exists.</td>
+          <td>Do not create another copy. Check if it only needs a PDF/link attached.</td>
+        </tr>
+        <tr>
+          <td><span class="label">No PDF linked</span></td>
+          <td>The record exists but has no attached PDF.</td>
+          <td>Attach the correct PDF later, or add an external link if available.</td>
+        </tr>
+        <tr>
+          <td><span class="label">Server Connection Failed</span></td>
+          <td>The app cannot reach the server.</td>
+          <td>Use the Start IIS shortcut, refresh, then call IT/admin if it continues.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="box warning">
+    <h2>Before Finishing The Day</h2>
+    <ul>
+      <li>Check that important uploads are visible in Workspace or Masterlist.</li>
+      <li>Make sure pending items are not accidentally left public.</li>
+      <li>Review duplicate or similar-title warnings before approving records.</li>
+      <li>Log out when done.</li>
+    </ul>
+  </section>
+
+  <p class="footer">Tip for trainers: teach one workflow at a time. Start with one manual upload, then one CSV import, then one PDF attach.</p>
+</main>
+</body>
+</html>
