@@ -1,0 +1,43 @@
+Important commands when deploying
+
+Backend
+composer install
+php spark migrate
+php spark db:seed UsersSeeder
+php spark db:seed ReindexResearchSearchSeeder  (optional: backfill PDF/index search for existing records)
+php spark index:research --limit 200          (optional: process pending index jobs now)
+php spark assistant:evaluate                  (optional: run assistant benchmark checks)
+
+Optional OCR support (for scanned PDFs)
+Install Poppler (pdftoppm) + Tesseract on server and make commands available in PATH.
+Then run: php spark db:seed ReindexResearchSearchSeeder
+Optional .env:
+search.ocr.maxPages = 3
+search.ocr.dpi = 180
+search.ocr.lang = eng
+search.index.maxAttempts = 3
+
+Recommended scheduler (production)
+Run every minute:
+php spark index:research --limit 50
+
+Emergency access reset (if login is broken)
+php spark db:seed EmergencyResetSeeder
+Resets only admin account (admin@bsu.edu.ph) to default password: 123admin
+
+Frontend
+npm install
+npm run build
+
+Optional local setup packages
+npm install -D @tailwindcss/postcss
+npm install axios
+npm install --save-dev @vitejs/plugin-basic-ssl (for https)
+npm install vue-router@4
+
+Important warning
+Do NOT run `php spark db:seed Migrate` on production.
+That seeder is destructive (drops tables and reloads SQL).
+
+If certificate errors appear, open this once in browser and trust it:
+https://192.168.x.x/OJT2/backend/public/

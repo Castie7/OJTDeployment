@@ -1,0 +1,1 @@
+<?php $opts=["http"=>["method"=>"PATCH","ignore_errors"=>true]]; $context=stream_context_create($opts); file_get_contents("http://localhost/OJT2/backend/public/index.php/research/1/reject",false,$context); echo json_encode($http_response_header, JSON_PRETTY_PRINT);

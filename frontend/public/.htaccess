@@ -1,0 +1,16 @@
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Let backend/API requests pass through untouched
+    RewriteRule ^backend/ - [L]
+
+    # Serve existing files/folders directly
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Vue SPA fallback
+    RewriteRule ^ index.html [L]
+</IfModule>

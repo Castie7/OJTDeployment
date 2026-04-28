@@ -1,0 +1,1 @@
+import{a}from"./index-BjPcjH8u.js";const o={async login(t){return(await a.post("/auth/login",t)).data},async logout(){await a.post("/auth/logout")},async verify(){return(await a.get("/auth/verify")).data},async register(t){return(await a.post("/auth/register",t)).data}};export{o as a};

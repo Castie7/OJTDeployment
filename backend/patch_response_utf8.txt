@@ -1,0 +1,1233 @@
+RESPONSE BODY: 
+{
+    "title": "CodeIgniter\\Security\\Exceptions\\SecurityException",
+    "type": "CodeIgniter\\Security\\Exceptions\\SecurityException",
+    "code": 403,
+    "message": "The action you requested is not allowed.",
+    "file": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\Security\\Security.php",
+    "line": 262,
+    "trace": [
+        {
+            "file": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\Security\\Security.php",
+            "line": 262,
+            "function": "forDisallowedAction",
+            "class": "CodeIgniter\\Security\\Exceptions\\SecurityException",
+            "type": "::",
+            "args": []
+        },
+        {
+            "file": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\Filters\\CSRF.php",
+            "line": 52,
+            "function": "verify",
+            "class": "CodeIgniter\\Security\\Security",
+            "type": "->",
+            "args": [
+                {
+                    "protocolVersion": "1.1",
+                    "validProtocolVersions": [
+                        "1.0",
+                        "1.1",
+                        "2.0",
+                        "3.0"
+                    ],
+                    "body": null,
+                    "headers": {
+                        "Host": {
+                            "name": "Host",
+                            "value": "localhost"
+                        },
+                        "Connection": {
+                            "name": "Connection",
+                            "value": "close"
+                        },
+                        "Origin": {
+                            "name": "Origin",
+                            "value": "http://localhost:5173"
+                        },
+                        "X-Requested-With": {
+                            "name": "X-Requested-With",
+                            "value": "XMLHttpRequest"
+                        }
+                    },
+                    "headerMap": {
+                        "host": "Host",
+                        "connection": "Connection",
+                        "origin": "Origin",
+                        "x-requested-with": "X-Requested-With"
+                    },
+                    "method": "PATCH",
+                    "uri": {
+                        "uriString": null,
+                        "baseURL": {
+                            "uriString": null,
+                            "baseURL": null,
+                            "segments": [
+                                "OJT2",
+                                "backend",
+                                "public",
+                                "index.php"
+                            ],
+                            "scheme": "http",
+                            "user": null,
+                            "password": null,
+                            "host": "localhost",
+                            "port": null,
+                            "path": "/OJT2/backend/public/index.php/",
+                            "fragment": "",
+                            "query": [],
+                            "defaultPorts": {
+                                "http": 80,
+                                "https": 443,
+                                "ftp": 21,
+                                "sftp": 22
+                            },
+                            "showPassword": false,
+                            "silent": false,
+                            "rawQueryString": false
+                        },
+                        "segments": [
+                            "research",
+                            "1",
+                            "reject"
+                        ],
+                        "scheme": "http",
+                        "user": null,
+                        "password": null,
+                        "host": "localhost",
+                        "port": null,
+                        "path": "/OJT2/backend/public/index.php/index.php/research/1/reject",
+                        "fragment": "",
+                        "query": [],
+                        "defaultPorts": {
+                            "http": 80,
+                            "https": 443,
+                            "ftp": 21,
+                            "sftp": 22
+                        },
+                        "showPassword": false,
+                        "silent": false,
+                        "rawQueryString": false,
+                        "basePathWithoutIndexPage": "/OJT2/backend/public/index.php/",
+                        "indexPage": "index.php",
+                        "baseSegments": [
+                            "OJT2",
+                            "backend",
+                            "public",
+                            "index.php",
+                            "index.php"
+                        ],
+                        "routePath": "research/1/reject"
+                    },
+                    "config": {
+                        "baseURL": "http://localhost/OJT2/backend/public/index.php/",
+                        "allowedHostnames": [],
+                        "indexPage": "index.php",
+                        "uriProtocol": "REQUEST_URI",
+                        "permittedURIChars": "a-z 0-9~%.:_\\-",
+                        "defaultLocale": "en",
+                        "negotiateLocale": false,
+                        "supportedLocales": [
+                            "en"
+                        ],
+                        "appTimezone": "UTC",
+                        "charset": "UTF-8",
+                        "forceGlobalSecureRequests": false,
+                        "proxyIPs": [],
+                        "CSPEnabled": false
+                    },
+                    "ipAddress": "",
+                    "globals": {
+                        "server": {
+                            "MIBDIRS": "C:/xampp/php/extras/mibs",
+                            "MYSQL_HOME": "\\xampp\\mysql\\bin",
+                            "OPENSSL_CONF": "C:/xampp/apache/bin/openssl.cnf",
+                            "PHP_PEAR_SYSCONF_DIR": "\\xampp\\php",
+                            "PHPRC": "\\xampp\\php",
+                            "TMP": "\\xampp\\tmp",
+                            "HTTP_HOST": "localhost",
+                            "HTTP_CONNECTION": "close",
+                            "HTTP_ORIGIN": "http://localhost:5173",
+                            "HTTP_X_REQUESTED_WITH": "XMLHttpRequest",
+                            "PATH": "C:\\Program Files\\Common Files\\Oracle\\Java\\javapath;C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\java8path;C:\\Program Files (x86)\\Common Files\\Oracle\\Java\\javapath;C:\\Windows\\system32;C:\\Windows;C:\\Windows\\System32\\Wbem;C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\;C:\\Windows\\System32\\OpenSSH\\;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\Program Files\\NVIDIA Corporation\\NVIDIA NvDLISR;C:\\Program Files\\Java\\jdk-19\\bin;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\WINDOWS\\System32\\OpenSSH\\;C:\\Program Files\\MongoDB\\mongosh-2.0.2-win32-x64\\bin;C:\\pythonProject\\venv\\Scripts;C:\\Program Files\\dotnet\\;C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin;C:\\xampp\\php;C:\\yt-dlp;C:\\ffmpeg\\ffmpeg-master-latest-win64-gpl\\ffmpeg-master-latest-win64-gpl\\bin;C:\\ProgramData\\ComposerSetup\\bin;C:\\Program Files\\Git\\cmd;C:\\Program Files\\nodejs\\;C:\\WINDOWS\\system32\\config\\systemprofile\\AppData\\Local\\Microsoft\\WindowsApps",
+                            "SystemRoot": "C:\\WINDOWS",
+                            "COMSPEC": "C:\\WINDOWS\\system32\\cmd.exe",
+                            "PATHEXT": ".COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC",
+                            "WINDIR": "C:\\WINDOWS",
+                            "SERVER_SIGNATURE": "<address>Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12 Server at localhost Port 80</address>\n",
+                            "SERVER_SOFTWARE": "Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12",
+                            "SERVER_NAME": "localhost",
+                            "SERVER_ADDR": "::1",
+                            "SERVER_PORT": "80",
+                            "REMOTE_ADDR": "::1",
+                            "DOCUMENT_ROOT": "C:/xampp/htdocs",
+                            "REQUEST_SCHEME": "http",
+                            "CONTEXT_PREFIX": "",
+                            "CONTEXT_DOCUMENT_ROOT": "C:/xampp/htdocs",
+                            "SERVER_ADMIN": "postmaster@localhost",
+                            "SCRIPT_FILENAME": "C:/xampp/htdocs/OJT2/backend/public/index.php",
+                            "REMOTE_PORT": "28170",
+                            "GATEWAY_INTERFACE": "CGI/1.1",
+                            "SERVER_PROTOCOL": "HTTP/1.1",
+                            "REQUEST_METHOD": "PATCH",
+                            "QUERY_STRING": "",
+                            "REQUEST_URI": "/OJT2/backend/public/index.php/research/1/reject",
+                            "SCRIPT_NAME": "/OJT2/backend/public/index.php",
+                            "PATH_INFO": "/research/1/reject",
+                            "PATH_TRANSLATED": "C:\\xampp\\htdocs\\research\\1\\reject",
+                            "PHP_SELF": "/OJT2/backend/public/index.php/research/1/reject",
+                            "REQUEST_TIME_FLOAT": 1771551058.978711,
+                            "REQUEST_TIME": 1771551058,
+                            "CI_ENVIRONMENT": "development",
+                            "app.baseURL": "http://192.168.60.36/OJT2/backend/public/",
+                            "database.default.hostname": "localhost",
+                            "database.default.database": "rootcrop_db",
+                            "database.default.username": "root",
+                            "database.default.password": "",
+                            "database.default.DBDriver": "MySQLi",
+                            "database.default.DBPrefix": "",
+                            "database.default.port": "3306"
+                        },
+                        "get": [],
+                        "cookie": [],
+                        "post": []
+                    },
+                    "path": "research/1/reject",
+                    "files": null,
+                    "negotiator": null,
+                    "defaultLocale": "en",
+                    "locale": "en",
+                    "validLocales": [
+                        "en"
+                    ],
+                    "oldInput": [],
+                    "userAgent": {
+                        "agent": "",
+                        "isBrowser": false,
+                        "isRobot": false,
+                        "isMobile": false,
+                        "config": {
+                            "platforms": {
+                                "windows nt 10.0": "Windows 10",
+                                "windows nt 6.3": "Windows 8.1",
+                                "windows nt 6.2": "Windows 8",
+                                "windows nt 6.1": "Windows 7",
+                                "windows nt 6.0": "Windows Vista",
+                                "windows nt 5.2": "Windows 2003",
+                                "windows nt 5.1": "Windows XP",
+                                "windows nt 5.0": "Windows 2000",
+                                "windows nt 4.0": "Windows NT 4.0",
+                                "winnt4.0": "Windows NT 4.0",
+                                "winnt 4.0": "Windows NT",
+                                "winnt": "Windows NT",
+                                "windows 98": "Windows 98",
+                                "win98": "Windows 98",
+                                "windows 95": "Windows 95",
+                                "win95": "Windows 95",
+                                "windows phone": "Windows Phone",
+                                "windows": "Unknown Windows OS",
+                                "android": "Android",
+                                "blackberry": "BlackBerry",
+                                "iphone": "iOS",
+                                "ipad": "iOS",
+                                "ipod": "iOS",
+                                "os x": "Mac OS X",
+                                "ppc mac": "Power PC Mac",
+                                "freebsd": "FreeBSD",
+                                "ppc": "Macintosh",
+                                "linux": "Linux",
+                                "debian": "Debian",
+                                "sunos": "Sun Solaris",
+                                "beos": "BeOS",
+                                "apachebench": "ApacheBench",
+                                "aix": "AIX",
+                                "irix": "Irix",
+                                "osf": "DEC OSF",
+                                "hp-ux": "HP-UX",
+                                "netbsd": "NetBSD",
+                                "bsdi": "BSDi",
+                                "openbsd": "OpenBSD",
+                                "gnu": "GNU/Linux",
+                                "unix": "Unknown Unix OS",
+                                "symbian": "Symbian OS"
+                            },
+                            "browsers": {
+                                "OPR": "Opera",
+                                "Flock": "Flock",
+                                "Edge": "Spartan",
+                                "Edg": "Edge",
+                                "Chrome": "Chrome",
+                                "Opera.*?Version": "Opera",
+                                "Opera": "Opera",
+                                "MSIE": "Internet Explorer",
+                                "Internet Explorer": "Internet Explorer",
+                                "Trident.* rv": "Internet Explorer",
+                                "Shiira": "Shiira",
+                                "Firefox": "Firefox",
+                                "Chimera": "Chimera",
+                                "Phoenix": "Phoenix",
+                                "Firebird": "Firebird",
+                                "Camino": "Camino",
+                                "Netscape": "Netscape",
+                                "OmniWeb": "OmniWeb",
+                                "Safari": "Safari",
+                                "Mozilla": "Mozilla",
+                                "Konqueror": "Konqueror",
+                                "icab": "iCab",
+                                "Lynx": "Lynx",
+                                "Links": "Links",
+                                "hotjava": "HotJava",
+                                "amaya": "Amaya",
+                                "IBrowse": "IBrowse",
+                                "Maxthon": "Maxthon",
+                                "Ubuntu": "Ubuntu Web Browser",
+                                "Vivaldi": "Vivaldi"
+                            },
+                            "mobiles": {
+                                "mobileexplorer": "Mobile Explorer",
+                                "palmsource": "Palm",
+                                "palmscape": "Palmscape",
+                                "motorola": "Motorola",
+                                "nokia": "Nokia",
+                                "palm": "Palm",
+                                "iphone": "Apple iPhone",
+                                "ipad": "iPad",
+                                "ipod": "Apple iPod Touch",
+                                "sony": "Sony Ericsson",
+                                "ericsson": "Sony Ericsson",
+                                "blackberry": "BlackBerry",
+                                "cocoon": "O2 Cocoon",
+                                "blazer": "Treo",
+                                "lg": "LG",
+                                "amoi": "Amoi",
+                                "xda": "XDA",
+                                "mda": "MDA",
+                                "vario": "Vario",
+                                "htc": "HTC",
+                                "samsung": "Samsung",
+                                "sharp": "Sharp",
+                                "sie-": "Siemens",
+                                "alcatel": "Alcatel",
+                                "benq": "BenQ",
+                                "ipaq": "HP iPaq",
+                                "mot-": "Motorola",
+                                "playstation portable": "PlayStation Portable",
+                                "playstation 3": "PlayStation 3",
+                                "playstation vita": "PlayStation Vita",
+                                "hiptop": "Danger Hiptop",
+                                "nec-": "NEC",
+                                "panasonic": "Panasonic",
+                                "philips": "Philips",
+                                "sagem": "Sagem",
+                                "sanyo": "Sanyo",
+                                "spv": "SPV",
+                                "zte": "ZTE",
+                                "sendo": "Sendo",
+                                "nintendo dsi": "Nintendo DSi",
+                                "nintendo ds": "Nintendo DS",
+                                "nintendo 3ds": "Nintendo 3DS",
+                                "wii": "Nintendo Wii",
+                                "open web": "Open Web",
+                                "openweb": "OpenWeb",
+                                "android": "Android",
+                                "symbian": "Symbian",
+                                "SymbianOS": "SymbianOS",
+                                "elaine": "Palm",
+                                "series60": "Symbian S60",
+                                "windows ce": "Windows CE",
+                                "obigo": "Obigo",
+                                "netfront": "Netfront Browser",
+                                "openwave": "Openwave Browser",
+                                "mobilexplorer": "Mobile Explorer",
+                                "operamini": "Opera Mini",
+                                "opera mini": "Opera Mini",
+                                "opera mobi": "Opera Mobile",
+                                "fennec": "Firefox Mobile",
+                                "digital paths": "Digital Paths",
+                                "avantgo": "AvantGo",
+                                "xiino": "Xiino",
+                                "novarra": "Novarra Transcoder",
+                                "vodafone": "Vodafone",
+                                "docomo": "NTT DoCoMo",
+                                "o2": "O2",
+                                "mobile": "Generic Mobile",
+                                "wireless": "Generic Mobile",
+                                "j2me": "Generic Mobile",
+                                "midp": "Generic Mobile",
+                                "cldc": "Generic Mobile",
+                                "up.link": "Generic Mobile",
+                                "up.browser": "Generic Mobile",
+                                "smartphone": "Generic Mobile",
+                                "cellphone": "Generic Mobile"
+                            },
+                            "robots": {
+                                "googlebot": "Googlebot",
+                                "msnbot": "MSNBot",
+                                "baiduspider": "Baiduspider",
+                                "bingbot": "Bing",
+                                "slurp": "Inktomi Slurp",
+                                "yahoo": "Yahoo",
+                                "ask jeeves": "Ask Jeeves",
+                                "fastcrawler": "FastCrawler",
+                                "infoseek": "InfoSeek Robot 1.0",
+                                "lycos": "Lycos",
+                                "yandex": "YandexBot",
+                                "mediapartners-google": "MediaPartners Google",
+                                "CRAZYWEBCRAWLER": "Crazy Webcrawler",
+                                "adsbot-google": "AdsBot Google",
+                                "feedfetcher-google": "Feedfetcher Google",
+                                "curious george": "Curious George",
+                                "ia_archiver": "Alexa Crawler",
+                                "MJ12bot": "Majestic-12",
+                                "Uptimebot": "Uptimebot"
+                            }
+                        },
+                        "platform": "",
+                        "browser": "",
+                        "version": "",
+                        "mobile": "",
+                        "robot": "",
+                        "referrer": null
+                    }
+                }
+            ]
+        },
+        {
+            "file": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\Filters\\Filters.php",
+            "line": 241,
+            "function": "before",
+            "class": "CodeIgniter\\Filters\\CSRF",
+            "type": "->",
+            "args": [
+                "[CodeIgniter\\HTTP\\IncomingRequest Object *RECURSION*]",
+                null
+            ]
+        },
+        {
+            "file": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\Filters\\Filters.php",
+            "line": 221,
+            "function": "runBefore",
+            "class": "CodeIgniter\\Filters\\Filters",
+            "type": "->",
+            "args": [
+                [
+                    [
+                        "App\\Filters\\Cors",
+                        []
+                    ],
+                    [
+                        "CodeIgniter\\Filters\\CSRF",
+                        []
+                    ],
+                    [
+                        "CodeIgniter\\Filters\\InvalidChars",
+                        []
+                    ],
+                    [
+                        "App\\Filters\\AuthFilter",
+                        []
+                    ]
+                ]
+            ]
+        },
+        {
+            "file": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\CodeIgniter.php",
+            "line": 479,
+            "function": "run",
+            "class": "CodeIgniter\\Filters\\Filters",
+            "type": "->",
+            "args": [
+                "research/1/reject",
+                "before"
+            ]
+        },
+        {
+            "file": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\CodeIgniter.php",
+            "line": 354,
+            "function": "handleRequest",
+            "class": "CodeIgniter\\CodeIgniter",
+            "type": "->",
+            "args": [
+                null,
+                {
+                    "handler": "file",
+                    "backupHandler": "dummy",
+                    "prefix": "",
+                    "ttl": 60,
+                    "reservedCharacters": "{}()/\\@:",
+                    "file": {
+                        "storePath": "C:\\xampp\\htdocs\\OJT2\\backend\\writable\\cache/",
+                        "mode": 416
+                    },
+                    "memcached": {
+                        "host": "127.0.0.1",
+                        "port": 11211,
+                        "weight": 1,
+                        "raw": false
+                    },
+                    "redis": {
+                        "host": "127.0.0.1",
+                        "password": null,
+                        "port": 6379,
+                        "timeout": 0,
+                        "database": 0
+                    },
+                    "validHandlers": {
+                        "dummy": "CodeIgniter\\Cache\\Handlers\\DummyHandler",
+                        "file": "CodeIgniter\\Cache\\Handlers\\FileHandler",
+                        "memcached": "CodeIgniter\\Cache\\Handlers\\MemcachedHandler",
+                        "predis": "CodeIgniter\\Cache\\Handlers\\PredisHandler",
+                        "redis": "CodeIgniter\\Cache\\Handlers\\RedisHandler",
+                        "wincache": "CodeIgniter\\Cache\\Handlers\\WincacheHandler"
+                    },
+                    "cacheQueryString": false
+                },
+                false
+            ]
+        },
+        {
+            "file": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\Boot.php",
+            "line": 363,
+            "function": "run",
+            "class": "CodeIgniter\\CodeIgniter",
+            "type": "->",
+            "args": []
+        },
+        {
+            "file": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\Boot.php",
+            "line": 68,
+            "function": "runCodeIgniter",
+            "class": "CodeIgniter\\Boot",
+            "type": "::",
+            "args": [
+                {
+                    "startTime": 1771551059.068162,
+                    "totalTime": null,
+                    "config": "[Config\\App Object *RECURSION*]",
+                    "benchmark": {
+                        "timers": {
+                            "total_execution": {
+                                "start": 1771551059.068162,
+                                "end": null
+                            },
+                            "bootstrap": {
+                                "start": 1771551059.083142,
+                                "end": 1771551059.133957
+                            },
+                            "required_before_filters": {
+                                "start": 1771551059.133959,
+                                "end": 1771551059.14063
+                            },
+                            "routing": {
+                                "start": 1771551059.140641,
+                                "end": 1771551059.142336
+                            },
+                            "before_filters": {
+                                "start": 1771551059.142795,
+                                "end": null
+                            }
+                        }
+                    },
+                    "request": "[CodeIgniter\\HTTP\\IncomingRequest Object *RECURSION*]",
+                    "response": {
+                        "protocolVersion": "1.1",
+                        "validProtocolVersions": [
+                            "1.0",
+                            "1.1",
+                            "2.0",
+                            "3.0"
+                        ],
+                        "body": null,
+                        "headers": {
+                            "Cache-Control": {
+                                "name": "Cache-Control",
+                                "value": [
+                                    "no-store",
+                                    "max-age=0",
+                                    "no-cache"
+                                ]
+                            },
+                            "Content-Type": {
+                                "name": "Content-Type",
+                                "value": "text/html; charset=UTF-8"
+                            }
+                        },
+                        "headerMap": {
+                            "cache-control": "Cache-Control",
+                            "content-type": "Content-Type"
+                        },
+                        "reason": "Forbidden",
+                        "statusCode": 403,
+                        "pretend": false,
+                        "CSP": {
+                            "directives": {
+                                "base-uri": "baseURI",
+                                "child-src": "childSrc",
+                                "connect-src": "connectSrc",
+                                "default-src": "defaultSrc",
+                                "font-src": "fontSrc",
+                                "form-action": "formAction",
+                                "frame-ancestors": "frameAncestors",
+                                "frame-src": "frameSrc",
+                                "img-src": "imageSrc",
+                                "media-src": "mediaSrc",
+                                "object-src": "objectSrc",
+                                "plugin-types": "pluginTypes",
+                                "script-src": "scriptSrc",
+                                "style-src": "styleSrc",
+                                "manifest-src": "manifestSrc",
+                                "sandbox": "sandbox",
+                                "report-uri": "reportURI"
+                            },
+                            "baseURI": null,
+                            "childSrc": "self",
+                            "connectSrc": "self",
+                            "defaultSrc": null,
+                            "fontSrc": null,
+                            "formAction": "self",
+                            "frameAncestors": null,
+                            "frameSrc": null,
+                            "imageSrc": "self",
+                            "mediaSrc": null,
+                            "objectSrc": "self",
+                            "pluginTypes": null,
+                            "scriptSrc": [
+                                "self"
+                            ],
+                            "styleSrc": [
+                                "self"
+                            ],
+                            "manifestSrc": null,
+                            "sandbox": null,
+                            "reportURI": null,
+                            "upgradeInsecureRequests": false,
+                            "reportOnly": false,
+                            "validSources": [
+                                "self",
+                                "none",
+                                "unsafe-inline",
+                                "unsafe-eval"
+                            ],
+                            "nonces": [],
+                            "styleNonce": null,
+                            "scriptNonce": null,
+                            "styleNonceTag": "",
+                            "scriptNonceTag": "",
+                            "autoNonce": true,
+                            "tempHeaders": [],
+                            "reportOnlyHeaders": [],
+                            "CSPEnabled": false
+                        },
+                        "cookieStore": {
+                            "cookies": {
+                                "csrf_cookie_name;/;": {
+                                    "prefix": "",
+                                    "name": "csrf_cookie_name",
+                                    "value": "c48dee2772c8c4e89ad8f05401115265",
+                                    "expires": 1771558259,
+                                    "path": "/",
+                                    "domain": "",
+                                    "secure": false,
+                                    "httponly": false,
+                                    "samesite": "Lax",
+                                    "raw": false
+                                }
+                            }
+                        },
+                        "bodyFormat": "html"
+                    },
+                    "router": {
+                        "collection": {
+                            "defaultNamespace": "App\\Controllers\\",
+                            "defaultController": "Home",
+                            "defaultMethod": "index",
+                            "defaultPlaceholder": "any",
+                            "translateURIDashes": false,
+                            "autoRoute": false,
+                            "override404": null,
+                            "routeFiles": [
+                                "C:\\xampp\\htdocs\\OJT2\\backend\\app\\Config\\Routes.php"
+                            ],
+                            "placeholders": {
+                                "any": ".*",
+                                "segment": "[^/]+",
+                                "alphanum": "[a-zA-Z0-9]+",
+                                "num": "[0-9]+",
+                                "alpha": "[a-zA-Z]+",
+                                "hash": "[^/]+"
+                            },
+                            "routes": {
+                                "*": [],
+                                "OPTIONS": {
+                                    "(.*)": {
+                                        "name": "(.*)",
+                                        "handler": "[Closure]",
+                                        "from": "(:any)"
+                                    }
+                                },
+                                "GET": {
+                                    "__hot-reload": {
+                                        "name": "__hot-reload",
+                                        "handler": "[Closure]",
+                                        "from": "__hot-reload"
+                                    },
+                                    "/": {
+                                        "name": "/",
+                                        "handler": "\\App\\Controllers\\Home::index",
+                                        "from": "/"
+                                    },
+                                    "auth/verify": {
+                                        "name": "auth/verify",
+                                        "handler": "\\App\\Controllers\\AuthController::verify",
+                                        "from": "auth/verify"
+                                    },
+                                    "admin/users": {
+                                        "name": "admin/users",
+                                        "handler": "\\App\\Controllers\\AdminController::index",
+                                        "from": "admin/users"
+                                    },
+                                    "api/notifications": {
+                                        "name": "api/notifications",
+                                        "handler": "\\App\\Controllers\\NotificationController::index",
+                                        "from": "api/notifications"
+                                    },
+                                    "api/logs/export": {
+                                        "name": "api/logs/export",
+                                        "handler": "\\App\\Controllers\\Admin\\LogController::export",
+                                        "from": "api/logs/export"
+                                    },
+                                    "api/logs": {
+                                        "name": "api/logs",
+                                        "handler": "\\App\\Controllers\\Admin\\LogController::index",
+                                        "from": "api/logs"
+                                    },
+                                    "api/logs/([^/]+)": {
+                                        "name": "api/logs/([^/]+)",
+                                        "handler": "\\App\\Controllers\\Admin\\LogController::show/$1",
+                                        "from": "api/logs/(:segment)"
+                                    },
+                                    "research/user-stats/([0-9]+)": {
+                                        "name": "research/user-stats/([0-9]+)",
+                                        "handler": "\\App\\Controllers\\ResearchController::userStats/$1",
+                                        "from": "research/user-stats/(:num)"
+                                    },
+                                    "research/stats": {
+                                        "name": "research/stats",
+                                        "handler": "\\App\\Controllers\\ResearchController::stats",
+                                        "from": "research/stats"
+                                    },
+                                    "research/masterlist": {
+                                        "name": "research/masterlist",
+                                        "handler": "\\App\\Controllers\\ResearchController::masterlist",
+                                        "from": "research/masterlist"
+                                    },
+                                    "research": {
+                                        "name": "research",
+                                        "handler": "\\App\\Controllers\\ResearchController::index",
+                                        "from": "research"
+                                    },
+                                    "research/archived": {
+                                        "name": "research/archived",
+                                        "handler": "\\App\\Controllers\\ResearchController::archived",
+                                        "from": "research/archived"
+                                    },
+                                    "research/my-submissions": {
+                                        "name": "research/my-submissions",
+                                        "handler": "\\App\\Controllers\\ResearchController::mySubmissions",
+                                        "from": "research/my-submissions"
+                                    },
+                                    "research/my-archived": {
+                                        "name": "research/my-archived",
+                                        "handler": "\\App\\Controllers\\ResearchController::myArchived",
+                                        "from": "research/my-archived"
+                                    },
+                                    "research/pending": {
+                                        "name": "research/pending",
+                                        "handler": "\\App\\Controllers\\ResearchController::pending",
+                                        "from": "research/pending"
+                                    },
+                                    "research/rejected": {
+                                        "name": "research/rejected",
+                                        "handler": "\\App\\Controllers\\ResearchController::rejectedList",
+                                        "from": "research/rejected"
+                                    },
+                                    "research/comments/([0-9]+)": {
+                                        "name": "research/comments/([0-9]+)",
+                                        "handler": "\\App\\Controllers\\ResearchController::getComments/$1",
+                                        "from": "research/comments/(:num)"
+                                    }
+                                },
+                                "HEAD": [],
+                                "POST": {
+                                    "auth/login": {
+                                        "name": "auth/login",
+                                        "handler": "\\App\\Controllers\\AuthController::login",
+                                        "from": "auth/login"
+                                    },
+                                    "auth/logout": {
+                                        "name": "auth/logout",
+                                        "handler": "\\App\\Controllers\\AuthController::logout",
+                                        "from": "auth/logout"
+                                    },
+                                    "auth/update-profile": {
+                                        "name": "auth/update-profile",
+                                        "handler": "\\App\\Controllers\\AuthController::updateProfile",
+                                        "from": "auth/update-profile"
+                                    },
+                                    "auth/register": {
+                                        "name": "auth/register",
+                                        "handler": "\\App\\Controllers\\AuthController::register",
+                                        "from": "auth/register"
+                                    },
+                                    "admin/reset-password": {
+                                        "name": "admin/reset-password",
+                                        "handler": "\\App\\Controllers\\AdminController::resetPassword",
+                                        "from": "admin/reset-password"
+                                    },
+                                    "api/notifications/read": {
+                                        "name": "api/notifications/read",
+                                        "handler": "\\App\\Controllers\\NotificationController::markAsRead",
+                                        "from": "api/notifications/read"
+                                    },
+                                    "api/comments": {
+                                        "name": "api/comments",
+                                        "handler": "\\App\\Controllers\\ResearchController::addComment",
+                                        "from": "api/comments"
+                                    },
+                                    "research": {
+                                        "name": "research",
+                                        "handler": "\\App\\Controllers\\ResearchController::create",
+                                        "from": "research"
+                                    },
+                                    "research/([0-9]+)": {
+                                        "name": "research/([0-9]+)",
+                                        "handler": "\\App\\Controllers\\ResearchController::update/$1",
+                                        "from": "research/(:num)"
+                                    },
+                                    "research/import-csv": {
+                                        "name": "research/import-csv",
+                                        "handler": "\\App\\Controllers\\ResearchController::importCsv",
+                                        "from": "research/import-csv"
+                                    },
+                                    "research/import-single": {
+                                        "name": "research/import-single",
+                                        "handler": "\\App\\Controllers\\ResearchController::importSingle",
+                                        "from": "research/import-single"
+                                    },
+                                    "research/bulk-upload-pdfs": {
+                                        "name": "research/bulk-upload-pdfs",
+                                        "handler": "\\App\\Controllers\\ResearchController::uploadBulkPdfs",
+                                        "from": "research/bulk-upload-pdfs"
+                                    }
+                                },
+                                "PATCH": {
+                                    "research/([0-9]+)/approve": {
+                                        "name": "research/([0-9]+)/approve",
+                                        "handler": "\\App\\Controllers\\ResearchController::approve/$1",
+                                        "from": "research/(:num)/approve"
+                                    },
+                                    "research/([0-9]+)/reject": {
+                                        "name": "research/([0-9]+)/reject",
+                                        "handler": "\\App\\Controllers\\ResearchController::reject/$1",
+                                        "from": "research/(:num)/reject"
+                                    },
+                                    "research/([0-9]+)/archive": {
+                                        "name": "research/([0-9]+)/archive",
+                                        "handler": "\\App\\Controllers\\ResearchController::archive/$1",
+                                        "from": "research/(:num)/archive"
+                                    },
+                                    "research/([0-9]+)/restore": {
+                                        "name": "research/([0-9]+)/restore",
+                                        "handler": "\\App\\Controllers\\ResearchController::restore/$1",
+                                        "from": "research/(:num)/restore"
+                                    },
+                                    "research/([0-9]+)/extend-deadline": {
+                                        "name": "research/([0-9]+)/extend-deadline",
+                                        "handler": "\\App\\Controllers\\ResearchController::extendDeadline/$1",
+                                        "from": "research/(:num)/extend-deadline"
+                                    }
+                                },
+                                "PUT": {
+                                    "research/([0-9]+)": {
+                                        "name": "research/([0-9]+)",
+                                        "handler": "\\App\\Controllers\\ResearchController::update/$1",
+                                        "from": "research/(:num)"
+                                    }
+                                },
+                                "DELETE": [],
+                                "TRACE": [],
+                                "CONNECT": [],
+                                "CLI": []
+                            },
+                            "routesNames": {
+                                "*": [],
+                                "OPTIONS": {
+                                    "(.*)": "(.*)"
+                                },
+                                "GET": {
+                                    "__hot-reload": "__hot-reload",
+                                    "/": "/",
+                                    "auth/verify": "auth/verify",
+                                    "admin/users": "admin/users",
+                                    "api/notifications": "api/notifications",
+                                    "api/logs/export": "api/logs/export",
+                                    "api/logs": "api/logs",
+                                    "api/logs/([^/]+)": "api/logs/([^/]+)",
+                                    "research/user-stats/([0-9]+)": "research/user-stats/([0-9]+)",
+                                    "research/stats": "research/stats",
+                                    "research/masterlist": "research/masterlist",
+                                    "research": "research",
+                                    "research/archived": "research/archived",
+                                    "research/my-submissions": "research/my-submissions",
+                                    "research/my-archived": "research/my-archived",
+                                    "research/pending": "research/pending",
+                                    "research/rejected": "research/rejected",
+                                    "research/comments/([0-9]+)": "research/comments/([0-9]+)"
+                                },
+                                "HEAD": [],
+                                "POST": {
+                                    "auth/login": "auth/login",
+                                    "auth/logout": "auth/logout",
+                                    "auth/update-profile": "auth/update-profile",
+                                    "auth/register": "auth/register",
+                                    "admin/reset-password": "admin/reset-password",
+                                    "api/notifications/read": "api/notifications/read",
+                                    "api/comments": "api/comments",
+                                    "research": "research",
+                                    "research/([0-9]+)": "research/([0-9]+)",
+                                    "research/import-csv": "research/import-csv",
+                                    "research/import-single": "research/import-single",
+                                    "research/bulk-upload-pdfs": "research/bulk-upload-pdfs"
+                                },
+                                "PATCH": {
+                                    "research/([0-9]+)/approve": "research/([0-9]+)/approve",
+                                    "research/([0-9]+)/reject": "research/([0-9]+)/reject",
+                                    "research/([0-9]+)/archive": "research/([0-9]+)/archive",
+                                    "research/([0-9]+)/restore": "research/([0-9]+)/restore",
+                                    "research/([0-9]+)/extend-deadline": "research/([0-9]+)/extend-deadline"
+                                },
+                                "PUT": {
+                                    "research/([0-9]+)": "research/([0-9]+)"
+                                },
+                                "DELETE": [],
+                                "TRACE": [],
+                                "CONNECT": [],
+                                "CLI": []
+                            },
+                            "routesOptions": {
+                                "GET": {
+                                    "__hot-reload": [],
+                                    "/": [],
+                                    "auth/verify": [],
+                                    "admin/users": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "api/notifications": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "api/logs/export": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "api/logs": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "api/logs/([^/]+)": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research/user-stats/([0-9]+)": [],
+                                    "research/stats": [],
+                                    "research/masterlist": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research": [],
+                                    "research/archived": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research/my-submissions": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research/my-archived": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research/pending": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research/rejected": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research/comments/([0-9]+)": []
+                                },
+                                "OPTIONS": {
+                                    "(.*)": []
+                                },
+                                "POST": {
+                                    "auth/login": [],
+                                    "auth/logout": [],
+                                    "auth/update-profile": [],
+                                    "auth/register": [],
+                                    "admin/reset-password": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "api/notifications/read": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "api/comments": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research/([0-9]+)": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research/import-csv": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research/import-single": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research/bulk-upload-pdfs": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    }
+                                },
+                                "PUT": {
+                                    "research/([0-9]+)": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    }
+                                },
+                                "PATCH": {
+                                    "research/([0-9]+)/approve": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research/([0-9]+)/reject": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research/([0-9]+)/archive": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research/([0-9]+)/restore": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    },
+                                    "research/([0-9]+)/extend-deadline": {
+                                        "filter": [
+                                            "auth"
+                                        ]
+                                    }
+                                }
+                            },
+                            "HTTPVerb": "PATCH",
+                            "defaultHTTPMethods": [
+                                "GET",
+                                "HEAD",
+                                "POST",
+                                "PATCH",
+                                "PUT",
+                                "DELETE",
+                                "OPTIONS",
+                                "TRACE",
+                                "CONNECT",
+                                "CLI"
+                            ],
+                            "group": null,
+                            "currentSubdomain": null,
+                            "currentOptions": null,
+                            "didDiscover": true,
+                            "fileLocator": {
+                                "autoloader": {
+                                    "prefixes": {
+                                        "CodeIgniter": [
+                                            "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\"
+                                        ],
+                                        "Config": [
+                                            "C:\\xampp\\htdocs\\OJT2\\backend\\app\\Config\\"
+                                        ],
+                                        "App": [
+                                            "C:\\xampp\\htdocs\\OJT2\\backend\\app\\"
+                                        ],
+                                        "Tests\\Support": [
+                                            "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\composer/../../tests/_support\\"
+                                        ],
+                                        "Psr\\Log": [
+                                            "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\composer/../psr/log/src\\"
+                                        ],
+                                        "Psr\\Container": [
+                                            "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\composer/../psr/container/src\\"
+                                        ],
+                                        "PhpParser": [
+                                            "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\composer/../nikic/php-parser/lib/PhpParser\\"
+                                        ],
+                                        "Laminas\\Escaper": [
+                                            "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\composer/../laminas/laminas-escaper/src\\"
+                                        ],
+                                        "Faker": [
+                                            "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\composer/../fakerphp/faker/src/Faker\\"
+                                        ],
+                                        "DeepCopy": [
+                                            "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\composer/../myclabs/deep-copy/src/DeepCopy\\"
+                                        ]
+                                    },
+                                    "classmap": {
+                                        "Psr\\Log\\AbstractLogger": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\ThirdParty/PSR/Log/AbstractLogger.php",
+                                        "Psr\\Log\\InvalidArgumentException": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\ThirdParty/PSR/Log/InvalidArgumentException.php",
+                                        "Psr\\Log\\LoggerAwareInterface": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\ThirdParty/PSR/Log/LoggerAwareInterface.php",
+                                        "Psr\\Log\\LoggerAwareTrait": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\ThirdParty/PSR/Log/LoggerAwareTrait.php",
+                                        "Psr\\Log\\LoggerInterface": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\ThirdParty/PSR/Log/LoggerInterface.php",
+                                        "Psr\\Log\\LoggerTrait": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\ThirdParty/PSR/Log/LoggerTrait.php",
+                                        "Psr\\Log\\LogLevel": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\ThirdParty/PSR/Log/LogLevel.php",
+                                        "Psr\\Log\\NullLogger": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\ThirdParty/PSR/Log/NullLogger.php",
+                                        "Laminas\\Escaper\\Exception\\ExceptionInterface": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\ThirdParty/Escaper/Exception/ExceptionInterface.php",
+                                        "Laminas\\Escaper\\Exception\\InvalidArgumentException": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\ThirdParty/Escaper/Exception/InvalidArgumentException.php",
+                                        "Laminas\\Escaper\\Exception\\RuntimeException": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\ThirdParty/Escaper/Exception/RuntimeException.php",
+                                        "Laminas\\Escaper\\EscaperInterface": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\ThirdParty/Escaper/EscaperInterface.php",
+                                        "Laminas\\Escaper\\Escaper": "C:\\xampp\\htdocs\\OJT2\\backend\\vendor\\codeigniter4\\framework\\system\\ThirdParty/Escaper/Escaper.php"
+                                    },
+                                    "files": [],
+                                    "helpers": [
+                                        "url"
+                                    ]
+                                },
+                                "invalidClassnames": []
+                            },
+                            "moduleConfig": {
+                                "enabled": true,
+                                "discoverInComposer": true,
+                                "aliases": [
+                                    "events",
+                                    "filters",
+                                    "registrars",
+                                    "routes",
+                                    "services"
+                                ],
+                                "composerPackages": []
+                            },
+                            "prioritize": false,
+                            "prioritizeDetected": false,
+                            "httpHost": "localhost",
+                            "useSupportedLocalesOnly": false
+                        },
+                        "directory": null,
+                        "controller": "\\App\\Controllers\\ResearchController",
+                        "method": "reject",
+                        "params": [
+                            "1"
+                        ],
+                        "indexPage": "index.php",
+                        "translateURIDashes": false,
+                        "matchedRoute": [
+                            "research/([0-9]+)/reject",
+                            "\\App\\Controllers\\ResearchController::reject/$1"
+                        ],
+                        "matchedRouteOptions": {
+                            "filter": [
+                                "auth"
+                            ]
+                        },
+                        "detectedLocale": null,
+                        "filtersInfo": [
+                            "auth"
+                        ],
+                        "autoRouter": null,
+                        "permittedURIChars": "a-z 0-9~%.:_\\-"
+                    },
+                    "controller": "\\App\\Controllers\\ResearchController",
+                    "method": "reject",
+                    "output": null,
+                    "context": "web",
+                    "enableFilters": true,
+                    "returnResponse": false,
+                    "bufferLevel": 1,
+                    "pageCache": {
+                        "cacheQueryString": false,
+                        "ttl": 0,
+                        "cache": {
+                            "prefix": "",
+                            "path": "C:\\xampp\\htdocs\\OJT2\\backend\\writable\\cache/",
+                            "mode": 416
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "file": "C:\\xampp\\htdocs\\OJT2\\backend\\public\\index.php",
+            "line": 63,
+            "function": "bootWeb",
+            "class": "CodeIgniter\\Boot",
+            "type": "::",
+            "args": [
+                {
+                    "systemDirectory": "C:\\xampp\\htdocs\\OJT2\\backend\\app\\Config/../../vendor/codeigniter4/framework/system",
+                    "appDirectory": "C:\\xampp\\htdocs\\OJT2\\backend\\app\\Config/..",
+                    "writableDirectory": "C:\\xampp\\htdocs\\OJT2\\backend\\app\\Config/../../writable",
+                    "testsDirectory": "C:\\xampp\\htdocs\\OJT2\\backend\\app\\Config/../../tests",
+                    "viewDirectory": "C:\\xampp\\htdocs\\OJT2\\backend\\app\\Config/../Views"
+                }
+            ]
+        }
+    ]
+}
+
+HEADERS: 
+Array
+(
+    [0] => HTTP/1.1 403 Forbidden
+    [1] => Date: Fri, 20 Feb 2026 01:30:58 GMT
+    [2] => Server: Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.2.12
+    [3] => X-Powered-By: PHP/8.2.12
+    [4] => Access-Control-Allow-Origin: http://localhost:5173
+    [5] => Access-Control-Allow-Credentials: true
+    [6] => Access-Control-Max-Age: 3600
+    [7] => Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE, PATCH
+    [8] => Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, Authorization, X-CSRF-TOKEN
+    [9] => Cache-Control: no-store, max-age=0, no-cache
+    [10] => Set-Cookie: csrf_cookie_name=c48dee2772c8c4e89ad8f05401115265; expires=Fri, 20 Feb 2026 03:30:59 GMT; Max-Age=7200; path=/; SameSite=Lax
+    [11] => Connection: close
+    [12] => Content-Type: application/json; charset=UTF-8
+)
